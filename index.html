@@ -649,7 +649,10 @@
                         </div>
                     </div>
                     <div class="goal-info" id="goalInfo">
-                        <h3>Daily Goal</h3>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <h3>Daily Goal</h3>
+                            <span style="font-size:12px;cursor:pointer;" id="editGoalBtn">✏️</span>
+                        </div>
                         <p>${todayTotal} / ${state.goal} dhikr</p>
                     </div>
                 </div>
@@ -680,10 +683,10 @@
                 addPill.addEventListener('click', window.showAddTasbih);
             }
 
-            const goalInfo = document.getElementById('goalInfo');
-            if (goalInfo) {
-                goalInfo.style.cursor = 'pointer';
-                goalInfo.onclick = () => {
+            const editGoalBtn = document.getElementById('editGoalBtn');
+            if (editGoalBtn) {
+                editGoalBtn.onclick = (e) => {
+                    e.stopPropagation();
                     const newGoal = prompt('Set daily goal:', state.goal);
                     if (newGoal && parseInt(newGoal) > 0) {
                         state.goal = parseInt(newGoal);
