@@ -6,87 +6,66 @@
     <title>Tasbih Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         :root {
             --bg: #0D1117;
             --surface: #161B22;
-            --surface-elevated: #21262D;
+            --surface-light: #21262D;
             --primary: #58A6FF;
-            --secondary: #238636;
-            --accent: #F0883E;
-            --text-primary: #F0F6FC;
-            --text-secondary: #8B949E;
-            --glow: rgba(88, 166, 255, 0.4);
-            --glow-green: rgba(35, 134, 54, 0.4);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            --success: #238636;
+            --text: #F0F6FC;
+            --text-dim: #8B949E;
         }
 
         body {
             font-family: 'Quicksand', sans-serif;
             background: var(--bg);
-            color: var(--text-primary);
+            color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(ellipse at 20% 20%, rgba(88, 166, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(35, 134, 54, 0.08) 0%, transparent 50%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L35 15L45 17L38 25L40 35L30 30L20 35L22 25L15 17L25 15L30 5Z' fill='none' stroke='%23ffffff' stroke-opacity='0.02'/%3E%3C/svg%3E");
         }
 
         .app {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
+            padding: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .app { max-width: 600px; margin: 0 auto; padding: 32px; }
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 0;
+            padding: 12px 0;
         }
 
         .logo {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background: linear-gradient(135deg, var(--primary), #F0883E);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 12px;
-        }
-
+        .header-btns { display: flex; gap: 8px; }
+        
         .icon-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+            width: 36px; height: 36px;
+            border-radius: 10px;
             background: var(--surface);
-            border: 1px solid var(--surface-elevated);
-            color: var(--text-secondary);
+            border: 1px solid var(--surface-light);
+            color: var(--text-dim);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .icon-btn:hover {
-            background: var(--surface-elevated);
-            color: var(--text-primary);
         }
 
         main {
@@ -95,172 +74,101 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 40px;
+            gap: 24px;
             padding: 20px 0;
         }
 
-        .counter-container {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .current-tasbih {
-            font-size: 20px;
+        .current-tasbih-name {
+            font-size: 18px;
+            color: var(--text-dim);
             font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: capitalize;
         }
 
         .counter-btn {
-            position: relative;
-            width: 220px;
-            height: 220px;
+            width: 180px; height: 180px;
             border-radius: 50%;
-            background: linear-gradient(145deg, var(--surface), var(--surface-elevated));
-            border: 3px solid var(--surface-elevated);
+            background: var(--surface);
+            border: 3px solid var(--surface-light);
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: all 0.15s ease;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.4),
-                inset 0 2px 0 rgba(255, 255, 255, 0.05);
+            gap: 4px;
+            transition: transform 0.1s;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
         }
 
-        .counter-btn::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            background: conic-gradient(from 0deg, var(--primary), var(--secondary), var(--accent), var(--primary));
-            opacity: 0;
-            z-index: -1;
-            animation: rotate 4s linear infinite paused;
-            transition: opacity 0.3s ease;
+        @media (min-width: 768px) {
+            .counter-btn { width: 220px; height: 220px; }
         }
 
-        .counter-btn:active, .counter-btn.pressed {
-            transform: scale(0.96);
-        }
+        .counter-btn:active { transform: scale(0.95); }
+        .counter-btn.bump { animation: bump 0.15s; }
 
-        .counter-btn.pressed::before {
-            opacity: 0.6;
-        }
-
-        .counter-btn.counted {
-            animation: bounce 0.3s ease;
-        }
-
-        @keyframes bounce {
+        @keyframes bump {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes rotate {
-            to { transform: rotate(360deg); }
-        }
-
-        .counter-btn:hover::before {
-            opacity: 0.3;
+            50% { transform: scale(1.08); }
         }
 
         .counter-btn .arabic {
             font-family: 'Amiri', serif;
-            font-size: 36px;
-            color: var(--text-primary);
-            text-shadow: 0 0 20px var(--glow);
+            font-size: 28px;
+        }
+
+        @media (min-width: 768px) {
+            .counter-btn .arabic { font-size: 36px; }
         }
 
         .counter-btn .count {
-            font-size: 56px;
+            font-size: 48px;
             font-weight: 700;
             color: var(--primary);
-            text-shadow: 0 0 30px var(--glow);
-            line-height: 1;
         }
 
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: var(--glow);
-            transform: scale(0);
-            animation: ripple 0.6s ease-out;
-            pointer-events: none;
+        @media (min-width: 768px) {
+            .counter-btn .count { font-size: 56px; }
         }
 
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        .hint {
-            font-size: 14px;
-            color: var(--text-secondary);
-            opacity: 0.7;
-        }
-
-        .keyboard-hints {
-            font-size: 12px;
-            color: var(--text-secondary);
-            opacity: 0.5;
-            margin-top: -30px;
-        }
-
-        .goal-section {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        .hint { font-size: 13px; color: var(--text-dim); opacity: 0.7; }
+        .hint kbd { 
+            background: var(--surface); 
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            border: 1px solid var(--surface-light);
+            font-family: inherit;
         }
 
         .goal-card {
+            width: 100%;
             background: var(--surface);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 14px;
+            padding: 16px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            border: 1px solid var(--surface-elevated);
+            gap: 16px;
+            border: 1px solid var(--surface-light);
         }
 
         .goal-ring {
+            width: 64px; height: 64px;
             position: relative;
-            width: 80px;
-            height: 80px;
             flex-shrink: 0;
         }
 
-        .goal-ring svg {
-            transform: rotate(-90deg);
-        }
-
+        .goal-ring svg { transform: rotate(-90deg); }
         .goal-ring circle {
-            fill: none;
-            stroke-width: 8;
-            stroke-linecap: round;
+            fill: none; stroke-width: 6; stroke-linecap: round;
         }
-
-        .goal-ring .bg {
-            stroke: var(--surface-elevated);
-        }
-
+        .goal-ring .bg { stroke: var(--surface-light); }
         .goal-ring .progress {
-            stroke: var(--secondary);
-            stroke-dasharray: 226;
-            stroke-dashoffset: 226;
-            transition: stroke-dashoffset 0.5s ease;
-            filter: drop-shadow(0 0 8px var(--glow-green));
+            stroke: var(--success);
+            stroke-dasharray: 176;
+            stroke-dashoffset: 176;
+            transition: stroke-dashoffset 0.3s;
         }
 
-        .goal-ring .goal-text {
+        .goal-text {
             position: absolute;
             inset: 0;
             display: flex;
@@ -268,475 +176,252 @@
             align-items: center;
             justify-content: center;
         }
+        .goal-text .percent { font-size: 14px; font-weight: 700; }
+        .goal-text .label { font-size: 8px; color: var(--text-dim); text-transform: uppercase; }
 
-        .goal-ring .goal-count {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
+        .goal-info h3 { font-size: 16px; margin-bottom: 2px; }
+        .goal-info p { font-size: 13px; color: var(--text-dim); }
 
-        .goal-ring .goal-label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-        }
-
-        .goal-info {
-            flex: 1;
-        }
-
-        .goal-info h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .goal-info p {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .tasbih-selector {
+        .tasbih-list {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             overflow-x: auto;
-            padding: 8px 0;
+            width: 100%;
+            padding: 4px 0;
             scrollbar-width: none;
-            -ms-overflow-style: none;
         }
-
-        .tasbih-selector::-webkit-scrollbar {
-            display: none;
-        }
+        .tasbih-list::-webkit-scrollbar { display: none; }
 
         .tasbih-pill {
-            padding: 10px 18px;
-            border-radius: 24px;
+            padding: 8px 16px;
+            border-radius: 20px;
             background: var(--surface);
-            border: 1px solid var(--surface-elevated);
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 500;
+            border: 1px solid var(--surface-light);
+            color: var(--text-dim);
+            font-size: 13px;
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            transition: all 0.2s;
         }
-
         .tasbih-pill.active {
             background: var(--primary);
             color: var(--bg);
             border-color: var(--primary);
-            box-shadow: 0 4px 20px var(--glow);
         }
+        .tasbih-pill .pill-arabic { font-family: 'Amiri', serif; margin-right: 6px; }
 
-        .tasbih-pill .pill-arabic {
-            font-family: 'Amiri', serif;
-            font-size: 16px;
-        }
-
-        .add-tasbih-btn {
-            padding: 10px 18px;
-            border-radius: 24px;
+        .add-pill {
             background: transparent;
-            border: 2px dashed var(--surface-elevated);
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 500;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            border: 2px dashed var(--surface-light);
+            color: var(--text-dim);
         }
+        .add-pill:hover { border-color: var(--primary); color: var(--primary); }
 
-        .add-tasbih-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
+        /* Modal */
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(4px);
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.85);
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+            opacity: 0; visibility: hidden;
+            transition: all 0.3s;
             z-index: 100;
         }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.open { opacity: 1; visibility: visible; }
 
         .modal {
             background: var(--surface);
-            border-radius: 24px 24px 0 0;
-            width: 100%;
-            max-width: 500px;
-            max-height: 85vh;
-            overflow-y: auto;
+            width: 100%; max-width: 500px;
+            border-radius: 20px 20px 0 0;
             transform: translateY(100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
         }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
+        .modal-overlay.open .modal { transform: translateY(0); }
 
         .modal-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--surface-elevated);
+            padding: 20px;
+            border-bottom: 1px solid var(--surface-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            background: var(--surface);
         }
-
-        .modal-header h2 {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
+        .modal-header h2 { font-size: 18px; }
         .modal-close {
-            width: 32px;
-            height: 32px;
+            width: 28px; height: 28px;
             border-radius: 8px;
-            background: var(--surface-elevated);
+            background: var(--surface-light);
             border: none;
-            color: var(--text-secondary);
+            color: var(--text-dim);
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .modal-content {
-            padding: 24px;
-        }
+        .modal-body { padding: 20px; }
 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
-
         .stat-card {
             background: var(--bg);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid var(--surface-elevated);
-        }
-
-        .stat-card .value {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
-
-        .stat-card .label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .weekly-chart {
-            margin-top: 24px;
-        }
-
-        .weekly-chart h3 {
-            font-size: 16px;
-            margin-bottom: 16px;
-            color: var(--text-secondary);
-        }
-
-        .chart-bars {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            height: 120px;
-            gap: 8px;
-        }
-
-        .chart-bar {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .chart-bar .bar {
-            width: 100%;
-            max-width: 40px;
-            background: var(--surface-elevated);
-            border-radius: 6px;
-            min-height: 20px;
-            transition: height 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .chart-bar .bar::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, var(--primary), var(--secondary));
-            opacity: 0.7;
-            border-radius: 6px;
-        }
-
-        .chart-bar .day {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .settings-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .setting-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            background: var(--bg);
             border-radius: 12px;
-            border: 1px solid var(--surface-elevated);
+            padding: 16px;
+            text-align: center;
         }
+        .stat-card .val { font-size: 28px; font-weight: 700; color: var(--primary); }
+        .stat-card .lbl { font-size: 11px; color: var(--text-dim); text-transform: uppercase; }
 
-        .setting-item .info h4 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 2px;
+        .chart { display: flex; justify-content: space-between; align-items: flex-end; height: 80px; gap: 4px; }
+        .chart-bar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .chart-bar .bar {
+            width: 100%; max-width: 32px;
+            background: var(--surface-light);
+            border-radius: 4px;
+            min-height: 8px;
         }
+        .chart-bar .bar::after {
+            content: ''; display: block;
+            background: var(--primary);
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+        }
+        .chart-bar .day { font-size: 10px; color: var(--text-dim); }
 
-        .setting-item .info p {
-            font-size: 13px;
-            color: var(--text-secondary);
+        .setting-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px;
+            background: var(--bg);
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
+        .setting-row h4 { font-size: 14px; margin-bottom: 2px; }
+        .setting-row p { font-size: 12px; color: var(--text-dim); }
 
         .toggle {
-            width: 52px;
-            height: 28px;
-            background: var(--surface-elevated);
-            border-radius: 14px;
+            width: 44px; height: 24px;
+            background: var(--surface-light);
+            border-radius: 12px;
             position: relative;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: background 0.2s;
         }
-
-        .toggle.active {
-            background: var(--primary);
-        }
-
+        .toggle.on { background: var(--primary); }
         .toggle::after {
             content: '';
             position: absolute;
-            width: 22px;
-            height: 22px;
+            width: 18px; height: 18px;
             background: white;
             border-radius: 50%;
-            top: 3px;
-            left: 3px;
-            transition: transform 0.2s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            top: 3px; left: 3px;
+            transition: transform 0.2s;
         }
+        .toggle.on::after { transform: translateX(20px); }
 
-        .toggle.active::after {
-            transform: translateX(24px);
+        .goal-input {
+            width: 60px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--surface-light);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            text-align: center;
         }
 
         .btn {
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-size: 16px;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-primary { background: var(--primary); color: var(--bg); }
+        .btn-danger { background: rgba(248,81,73,0.2); color: #F85149; }
+
+        .tasbih-form {
+            background: var(--bg);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .tasbih-form input {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--surface-light);
+            background: var(--surface);
+            color: var(--text);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .tasbih-form input.arabic {
+            font-family: 'Amiri', serif;
+            direction: rtl;
+            text-align: right;
+        }
+        .tasbih-form-btns { display: flex; gap: 8px; }
+        .tasbih-form-btns .btn { margin: 0; }
+
+        .custom-list { margin-top: 12px; }
+        .custom-item {
+            display: flex; gap: 8px;
+            margin-bottom: 8px;
+        }
+        .custom-item input {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--surface-light);
+            background: var(--surface);
+            color: var(--text);
+            font-size: 13px;
+        }
+        .custom-item .del-btn {
+            width: 32px; height: 32px;
+            border-radius: 6px;
+            background: rgba(248,81,73,0.2);
             border: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: var(--bg);
-            width: 100%;
-        }
-
-        .btn-primary:hover {
-            filter: brightness(1.1);
-        }
-
-        .btn-danger {
-            background: rgba(248, 81, 73, 0.2);
             color: #F85149;
-            width: 100%;
+            cursor: pointer;
+            font-size: 18px;
         }
 
-        .btn-secondary {
-            background: var(--surface-elevated);
-            color: var(--text-primary);
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
         }
-
-        .celebration {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 200;
-        }
-
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            animation: confetti-fall 3s ease-out forwards;
-        }
-
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
+        .empty-state h3 { font-size: 18px; margin-bottom: 8px; }
+        .empty-state p { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
 
         .toast {
             position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
+            bottom: 80px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
             background: var(--surface);
-            padding: 14px 24px;
-            border-radius: 12px;
-            border: 1px solid var(--surface-elevated);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--surface-light);
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             z-index: 150;
         }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
+        .confetti {
+            position: fixed;
+            width: 8px; height: 8px;
+            border-radius: 2px;
+            animation: fall 2s linear forwards;
+            z-index: 200;
         }
-
-        .undo-hint {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 12px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .show-undo .undo-hint {
-            opacity: 1;
-        }
-
-        .custom-tasbih-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 16px;
-        }
-
-        .custom-tasbih-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: var(--bg);
-            border-radius: 12px;
-            border: 1px solid var(--surface-elevated);
-        }
-
-        .custom-tasbih-item input {
-            flex: 1;
-            background: var(--surface);
-            border: 1px solid var(--surface-elevated);
-            border-radius: 8px;
-            padding: 8px 12px;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-
-        .custom-tasbih-item input.arabic-input {
-            font-family: 'Amiri', serif;
-            text-align: right;
-            direction: rtl;
-        }
-
-        .delete-tasbih-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: rgba(248, 81, 73, 0.2);
-            border: none;
-            color: #F85149;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .add-tasbih-form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
-            padding: 16px;
-            background: var(--bg);
-            border-radius: 12px;
-            border: 1px solid var(--surface-elevated);
-        }
-
-        .add-tasbih-form input {
-            background: var(--surface);
-            border: 1px solid var(--surface-elevated);
-            border-radius: 8px;
-            padding: 12px;
-            color: var(--text-primary);
-            font-size: 16px;
-        }
-
-        .add-tasbih-form input.arabic-input {
-            font-family: 'Amiri', serif;
-            text-align: right;
-            direction: rtl;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .form-row .btn {
-            flex: 1;
-            padding: 12px;
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
     </style>
 </head>
@@ -744,55 +429,14 @@
     <div class="app">
         <header>
             <div class="logo">Tasbih Pro</div>
-            <div class="header-actions">
-                <button class="icon-btn" id="statsBtn" aria-label="Statistics">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 20V10M12 20V4M6 20v-6"/>
-                    </svg>
-                </button>
-                <button class="icon-btn" id="settingsBtn" aria-label="Settings">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                    </svg>
-                </button>
+            <div class="header-btns">
+                <button class="icon-btn" id="statsBtn">📊</button>
+                <button class="icon-btn" id="settingsBtn">⚙️</button>
             </div>
         </header>
 
-        <main>
-            <div class="counter-container">
-                <div class="current-tasbih" id="currentTasbih">SubhanAllah</div>
-                <button class="counter-btn" id="counterBtn">
-                    <span class="arabic" id="arabicText">سُبْحَانَ الله</span>
-                    <span class="count" id="countDisplay">0</span>
-                </button>
-                <span class="undo-hint">Swipe up to undo</span>
-            </div>
-
-            <p class="hint">Tap to count • Hold to decrease</p>
-            <p class="keyboard-hints">Enter: +1 | Backspace: -1 | Up: Undo</p>
-
-            <div class="goal-section">
-                <div class="goal-card">
-                    <div class="goal-ring">
-                        <svg width="80" height="80" viewBox="0 0 80 80">
-                            <circle class="bg" cx="40" cy="40" r="36"/>
-                            <circle class="progress" id="goalProgress" cx="40" cy="40" r="36"/>
-                        </svg>
-                        <div class="goal-text">
-                            <span class="goal-count" id="goalPercent">0%</span>
-                            <span class="goal-label">Goal</span>
-                        </div>
-                    </div>
-                    <div class="goal-info">
-                        <h3>Daily Goal</h3>
-                        <p><span id="todayCount">0</span> / <span id="goalTarget">100</span> dhikr today</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tasbih-selector" id="tasbihSelector">
-            </div>
+        <main id="mainArea">
+            <!-- Content injected by JS -->
         </main>
     </div>
 
@@ -800,36 +444,17 @@
         <div class="modal">
             <div class="modal-header">
                 <h2>Statistics</h2>
-                <button class="modal-close" id="closeStats">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                </button>
+                <button class="modal-close" id="closeStats">×</button>
             </div>
-            <div class="modal-content">
+            <div class="modal-body">
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="value" id="statToday">0</div>
-                        <div class="label">Today</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="value" id="statStreak">0</div>
-                        <div class="label">Day Streak</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="value" id="statWeek">0</div>
-                        <div class="label">This Week</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="value" id="statTotal">0</div>
-                        <div class="label">All Time</div>
-                    </div>
+                    <div class="stat-card"><div class="val" id="statToday">0</div><div class="lbl">Today</div></div>
+                    <div class="stat-card"><div class="val" id="statStreak">0</div><div class="lbl">Streak</div></div>
+                    <div class="stat-card"><div class="val" id="statWeek">0</div><div class="lbl">Week</div></div>
+                    <div class="stat-card"><div class="val" id="statTotal">0</div><div class="lbl">Total</div></div>
                 </div>
-                <div class="weekly-chart">
-                    <h3>Last 7 Days</h3>
-                    <div class="chart-bars" id="weeklyChart"></div>
-                </div>
+                <h3 style="font-size:14px;color:var(--text-dim);margin-bottom:12px;">Last 7 Days</h3>
+                <div class="chart" id="chart"></div>
             </div>
         </div>
     </div>
@@ -838,619 +463,440 @@
         <div class="modal">
             <div class="modal-header">
                 <h2>Settings</h2>
-                <button class="modal-close" id="closeSettings">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                </button>
+                <button class="modal-close" id="closeSettings">×</button>
             </div>
-            <div class="modal-content">
-                <div class="settings-list">
-                    <div class="setting-item">
-                        <div class="info">
-                            <h4>Sound</h4>
-                            <p>Play sound on tap</p>
-                        </div>
-                        <div class="toggle" id="soundToggle"></div>
-                    </div>
-                    <div class="setting-item">
-                        <div class="info">
-                            <h4>Vibration</h4>
-                            <p>Haptic feedback on mobile</p>
-                        </div>
-                        <div class="toggle active" id="vibrateToggle"></div>
-                    </div>
-                    <div class="setting-item">
-                        <div class="info">
-                            <h4>Daily Goal</h4>
-                            <p>Target dhikr per day</p>
-                        </div>
-                        <input type="number" id="goalInput" value="100" min="1" max="1000" 
-                            style="width: 80px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--surface-elevated); background: var(--bg); color: var(--text-primary); font-size: 16px;">
-                    </div>
+            <div class="modal-body">
+                <div class="setting-row">
+                    <div><h4>Sound</h4><p>Play on tap</p></div>
+                    <div class="toggle" id="soundToggle"></div>
+                </div>
+                <div class="setting-row">
+                    <div><h4>Vibration</h4><p>Haptic feedback</p></div>
+                    <div class="toggle on" id="vibrateToggle"></div>
+                </div>
+                <div class="setting-row">
+                    <div><h4>Daily Goal</h4><p>Dhikr target</p></div>
+                    <input type="number" class="goal-input" id="goalInput" value="100" min="1">
                 </div>
 
-                <h3 style="margin-top: 24px; font-size: 16px; color: var(--text-secondary);">Custom Tasbih</h3>
-                <div id="customTasbihList" class="custom-tasbih-list"></div>
-                <div class="add-tasbih-form" id="addTasbihForm">
-                    <input type="text" id="newTasbihName" placeholder="Name (e.g. SubhanAllah)">
-                    <input type="text" id="newTasbihArabic" class="arabic-input" placeholder="Arabic (optional)">
-                    <div class="form-row">
-                        <button class="btn btn-primary" id="addTasbihBtn">Add Tasbih</button>
-                        <button class="btn btn-secondary" id="cancelAddTasbih">Cancel</button>
-                    </div>
-                </div>
+                <h3 style="font-size:14px;color:var(--text-dim);margin:20px 0 12px;">Custom Tasbih</h3>
+                <div id="tasbihFormContainer"></div>
+                <div id="customList"></div>
 
-                <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;">
-                    <button class="btn btn-primary" id="resetToday">Reset Today's Count</button>
-                    <button class="btn btn-danger" id="resetAll">Reset All Data</button>
-                </div>
+                <button class="btn btn-primary" id="resetToday">Reset Today's Count</button>
+                <button class="btn btn-danger" id="resetAll">Reset All Data</button>
             </div>
         </div>
     </div>
 
-    <div class="toast" id="toast">Count undone</div>
-    <div class="celebration" id="celebration"></div>
+    <div class="toast" id="toast"></div>
 
-<script>
-        let audioContext = null;
-
-        function playClickSound() {
-            try {
-                if (!audioContext) {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.1);
-            } catch (e) {
-                console.log('Audio not available');
-            }
-        }
-
+    <script>
+        // State
         let state = {
             tasbihList: [],
             currentTasbih: null,
             counts: {},
-            today: new Date().toDateString(),
             history: {},
+            today: new Date().toDateString(),
             streak: 0,
-            settings: {
-                goal: 100,
-                sound: false,
-                vibrate: true
-            },
-            lastCount: null
+            goal: 100,
+            sound: false,
+            vibrate: true
         };
 
-        const elements = {
-            counterBtn: document.getElementById('counterBtn'),
-            countDisplay: document.getElementById('countDisplay'),
-            arabicText: document.getElementById('arabicText'),
-            currentTasbih: document.getElementById('currentTasbih'),
-            goalProgress: document.getElementById('goalProgress'),
-            goalPercent: document.getElementById('goalPercent'),
-            todayCount: document.getElementById('todayCount'),
-            goalTarget: document.getElementById('goalTarget'),
-            statsModal: document.getElementById('statsModal'),
-            settingsModal: document.getElementById('settingsModal'),
-            toast: document.getElementById('toast'),
-            celebration: document.getElementById('celebration'),
-            tasbihSelector: document.getElementById('tasbihSelector')
-        };
+        // Audio
+        let audioCtx = null;
+        function playSound() {
+            if (!state.sound) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = 880;
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch(e) {}
+        }
 
-        function loadState() {
-            const saved = localStorage.getItem('tasbihState');
+        // Save/Load
+        function save() {
+            localStorage.setItem('tasbihPro', JSON.stringify(state));
+        }
+
+        function load() {
+            const saved = localStorage.getItem('tasbihPro');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
                     const today = new Date().toDateString();
-                    
                     if (parsed.today !== today) {
-                        parsed.history[parsed.today] = parsed.counts;
+                        if (parsed.counts && Object.keys(parsed.counts).length) {
+                            parsed.history = parsed.history || {};
+                            parsed.history[parsed.today] = parsed.counts;
+                        }
                         parsed.counts = {};
                         parsed.today = today;
-                        
-                        let currentStreak = 0;
-                        const dates = Object.keys(parsed.history).sort().reverse();
-                        for (let date of dates) {
-                            const count = Object.values(parsed.history[date]).reduce((a, b) => a + b, 0);
-                            if (count > 0) {
-                                currentStreak++;
-                            } else {
-                                break;
-                            }
-                        }
-                        parsed.streak = currentStreak;
+                        // calc streak
+                        let streak = 0;
+                        Object.keys(parsed.history || {}).sort().reverse().forEach(d => {
+                            const c = Object.values(parsed.history[d] || {}).reduce((a,b)=>a+b,0);
+                            if (c > 0) streak++; else return;
+                        });
+                        parsed.streak = streak;
                     }
-                    
-                    if (parsed.tasbihList && parsed.tasbihList.length > 0) {
-                        state = { ...state, ...parsed };
-                    } else if (parsed.counts && Object.keys(parsed.counts).length > 0) {
-                        const oldTasbihs = [
-                            { id: 'subhanallah', name: 'SubhanAllah', arabic: 'سُبْحَانَ الله', display: 'سبحان' },
-                            { id: 'alhmadulillah', name: 'Alhmadulillah', arabic: 'الْحَمْدُ لِلَّهِ', display: 'الحمد' },
-                            { id: 'allahakbar', name: 'Allahu Akbar', arabic: 'الله أَكْبَرُ', display: 'الله أكبر' },
-                            { id: 'lailahaillallah', name: 'La ilaha illallah', arabic: 'لَا إِلَهَ إِلَّا اللَّهُ', display: 'لا إله' },
-                            { id: 'astaghfirullah', name: 'Astaghfirullah', arabic: 'أَسْتَغْفِرُ اللَّهَ', display: 'أستغفر' }
-                        ];
-                        const existingIds = Object.keys(parsed.counts || {});
-                        const tasbihList = oldTasbihs.filter(t => existingIds.includes(t.id));
-                        if (tasbihList.length > 0) {
-                            state = { ...state, ...parsed, tasbihList, currentTasbih: tasbihList[0].id };
-                        } else {
-                            state = { ...state, ...parsed };
-                        }
-                    } else {
-                        state = { ...state, ...parsed };
-                    }
-                } catch (e) {
-                    console.error('Failed to load state:', e);
-                }
+                    state = { ...state, ...parsed };
+                } catch(e) {}
             }
         }
 
-        function initCounts() {
-            state.tasbihList.forEach(t => {
-                if (state.counts[t.id] === undefined) {
-                    state.counts[t.id] = 0;
-                }
-            });
+        // Toast
+        function toast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
         }
 
-        function saveState() {
-            localStorage.setItem('tasbihState', JSON.stringify(state));
+        // Celebrate
+        function celebrate() {
+            const colors = ['#58A6FF','#238636','#F0883E','#A371F7','#F778BA'];
+            for (let i = 0; i < 40; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + '%';
+                c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                c.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 2500);
+            }
         }
 
-        function getTodayTotal() {
-            return Object.values(state.counts).reduce((a, b) => a + b, 0);
-        }
-
-        function renderTasbihSelector() {
+        // Render Main UI
+        function render() {
+            const main = document.getElementById('mainArea');
+            
             if (state.tasbihList.length === 0) {
-                elements.tasbihSelector.innerHTML = `
-                    <button class="add-tasbih-btn" id="showAddTasbih" style="border-style: solid; border-color: var(--primary); color: var(--primary);">
-                        + Add your first tasbih
-                    </button>
+                main.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Welcome to Tasbih Pro</h3>
+                        <p>Add your first tasbih to start counting</p>
+                        <button class="btn btn-primary" style="width:auto;padding:12px 24px;" onclick="showAddTasbih()">+ Add Tasbih</button>
+                    </div>
                 `;
-            } else {
-                elements.tasbihSelector.innerHTML = state.tasbihList.map(t => `
-                    <button class="tasbih-pill ${t.id === state.currentTasbih ? 'active' : ''}" data-tasbih="${t.id}">
-                        ${t.arabic ? `<span class="pill-arabic">${t.display}</span>` : ''}
-                        ${t.name}
-                    </button>
-                `).join('') + '<button class="add-tasbih-btn" id="showAddTasbih">+ Add</button>';
-            }
-            
-            document.querySelectorAll('.tasbih-pill').forEach(pill => {
-                pill.addEventListener('click', () => {
-                    state.currentTasbih = pill.dataset.tasbih;
-                    updateUI();
-                });
-            });
-
-            const addBtn = document.getElementById('showAddTasbih');
-            if (addBtn) {
-                addBtn.addEventListener('click', () => {
-                    document.getElementById('addTasbihForm').style.display = 'block';
-                    addBtn.style.display = 'none';
-                    document.getElementById('newTasbihName').focus();
-                });
-            }
-        }
-
-        function addNewTasbih() {
-            const nameInput = document.getElementById('newTasbihName');
-            const arabicInput = document.getElementById('newTasbihArabic');
-            const name = nameInput.value.trim();
-            const arabic = arabicInput.value.trim();
-            
-            if (!name) {
-                showToast('Please enter a name');
                 return;
             }
 
-            const id = 'tasbih_' + Date.now();
-            const display = arabic || name.substring(0, 4);
-            
-            state.tasbihList.push({ id, name, arabic: arabic || '', display });
-            state.counts[id] = 0;
-            state.currentTasbih = id;
-            
-            nameInput.value = '';
-            arabicInput.value = '';
-            document.getElementById('addTasbihForm').style.display = 'none';
-            
-            renderTasbihSelector();
-            renderCustomTasbihList();
-            updateUI();
-            saveState();
-            showToast('Tasbih added!');
-        }
-
-        function deleteTasbih(id) {
-            const tasbih = state.tasbihList.find(t => t.id === id);
-            if (confirm(`Delete "${tasbih.name}"?`)) {
-                delete state.counts[id];
-                state.tasbihList = state.tasbihList.filter(t => t.id !== id);
-                
-                if (state.currentTasbih === id) {
-                    state.currentTasbih = state.tasbihList.length > 0 ? state.tasbihList[0].id : null;
-                }
-                
-                renderTasbihSelector();
-                renderCustomTasbihList();
-                updateUI();
-                saveState();
+            const current = state.tasbihList.find(t => t.id === state.currentTasbih) || state.tasbihList[0];
+            if (!state.currentTasbih) {
+                state.currentTasbih = current.id;
             }
-        }
-
-        function renderCustomTasbihList() {
-            const container = document.getElementById('customTasbihList');
-            if (state.tasbihList.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">No tasbihs yet. Add one above!</p>';
-                return;
-            }
-            container.innerHTML = state.tasbihList.map(t => `
-                <div class="custom-tasbih-item">
-                    <input type="text" value="${t.name}" data-id="${t.id}" class="tasbih-name-input">
-                    <input type="text" value="${t.arabic}" data-id="${t.id}" class="arabic-input tasbih-arabic-input" placeholder="Arabic">
-                    <button class="delete-tasbih-btn" data-id="${t.id}">×</button>
-                </div>
-            `).join('');
-
-            container.querySelectorAll('.tasbih-name-input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    const id = e.target.dataset.id;
-                    const tasbih = state.tasbihList.find(t => t.id === id);
-                    tasbih.name = e.target.value;
-                    renderTasbihSelector();
-                    updateUI();
-                    saveState();
-                });
-            });
-
-            container.querySelectorAll('.tasbih-arabic-input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    const id = e.target.dataset.id;
-                    const tasbih = state.tasbihList.find(t => t.id === id);
-                    tasbih.arabic = e.target.value;
-                    tasbih.display = e.target.value || tasbih.name.substring(0, 4);
-                    renderTasbihSelector();
-                    updateUI();
-                    saveState();
-                });
-            });
-
-            container.querySelectorAll('.delete-tasbih-btn').forEach(btn => {
-                btn.addEventListener('click', () => deleteTasbih(btn.dataset.id));
-            });
-        }
-
-        function updateUI() {
-            if (state.tasbihList.length === 0) {
-                elements.countDisplay.textContent = '0';
-                elements.arabicText.textContent = '';
-                elements.currentTasbih.textContent = 'Add a tasbih to start';
-                elements.counterBtn.style.opacity = '0.5';
-                elements.counterBtn.style.pointerEvents = 'none';
-            } else {
-                elements.counterBtn.style.opacity = '1';
-                elements.counterBtn.style.pointerEvents = 'auto';
-            }
-
-            const tasbih = state.tasbihList.find(t => t.id === state.currentTasbih) || state.tasbihList[0];
-            if (!tasbih) return;
-
             const count = state.counts[state.currentTasbih] || 0;
+            const todayTotal = Object.values(state.counts).reduce((a,b) => a+b, 0);
+            const percent = Math.min((todayTotal / state.goal) * 100, 100);
+            const offset = 176 - (176 * percent / 100);
+
+            main.innerHTML = `
+                <div class="current-tasbih-name">${current.name}</div>
+                <button class="counter-btn" id="counterBtn">
+                    <span class="arabic">${current.arabic || ''}</span>
+                    <span class="count">${count}</span>
+                </button>
+                <p class="hint">Tap to count • <kbd>Enter</kbd> +1 • <kbd>Backspace</kbd> -1</p>
+                
+                <div class="goal-card">
+                    <div class="goal-ring">
+                        <svg width="64" height="64" viewBox="0 0 64 64">
+                            <circle class="bg" cx="32" cy="32" r="28"/>
+                            <circle class="progress" cx="32" cy="32" r="28" style="stroke-dashoffset:${offset}"/>
+                        </svg>
+                        <div class="goal-text">
+                            <span class="percent">${Math.round(percent)}%</span>
+                            <span class="label">Goal</span>
+                        </div>
+                    </div>
+                    <div class="goal-info">
+                        <h3>Daily Goal</h3>
+                        <p>${todayTotal} / ${state.goal} dhikr</p>
+                    </div>
+                </div>
+
+                <div class="tasbih-list">
+                    ${state.tasbihList.map(t => `
+                        <button class="tasbih-pill ${t.id === state.currentTasbih ? 'active' : ''}" data-id="${t.id}">
+                            ${t.arabic ? `<span class="pill-arabic">${t.display || t.name.slice(0,3)}</span>` : ''}${t.name}
+                        </button>
+                    `).join('')}
+                    <button class="tasbih-pill add-pill" onclick="showAddTasbih()">+</button>
+                </div>
+            `;
+
+            // Events
+            document.getElementById('counterBtn').addEventListener('click', increment);
             
-            elements.countDisplay.textContent = count;
-            elements.arabicText.textContent = tasbih.arabic || '';
-            elements.currentTasbih.textContent = tasbih.name;
-            
-            const todayTotal = getTodayTotal();
-            const goal = state.settings.goal;
-            const percent = Math.min((todayTotal / goal) * 100, 100);
-            
-            elements.goalProgress.style.strokeDashoffset = 226 - (226 * percent / 100);
-            elements.goalPercent.textContent = Math.round(percent) + '%';
-            elements.todayCount.textContent = todayTotal;
-            elements.goalTarget.textContent = goal;
-            
-            document.querySelectorAll('.tasbih-pill').forEach(pill => {
-                pill.classList.toggle('active', pill.dataset.tasbih === state.currentTasbih);
+            document.querySelectorAll('.tasbih-pill[data-id]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.currentTasbih = btn.dataset.id;
+                    save();
+                    render();
+                });
             });
-            
-            if (todayTotal >= goal && !state.goalReached) {
+
+            // Check goal
+            if (todayTotal >= state.goal && !state.goalReached) {
                 state.goalReached = true;
                 celebrate();
             }
-            
-            saveState();
         }
 
-        function increment(e) {
-            const btn = elements.counterBtn;
-            btn.classList.add('pressed');
-            setTimeout(() => btn.classList.remove('pressed'), 100);
+        // Counter
+        let lastCount = null;
+        function increment() {
+            const btn = document.getElementById('counterBtn');
+            btn.classList.add('bump');
+            setTimeout(() => btn.classList.remove('bump'), 150);
             
-            state.lastCount = { tasbih: state.currentTasbih, count: state.counts[state.currentTasbih] };
+            lastCount = { id: state.currentTasbih, count: state.counts[state.currentTasbih] };
             state.counts[state.currentTasbih] = (state.counts[state.currentTasbih] || 0) + 1;
             
-            if (e) createRipple(e);
-            btn.classList.add('counted');
-            setTimeout(() => btn.classList.remove('counted'), 300);
+            playSound();
+            if (state.vibrate && navigator.vibrate) navigator.vibrate(25);
             
-            if (state.settings.sound) {
-                playClickSound();
-            }
-            
-            if (state.settings.vibrate && navigator.vibrate) {
-                navigator.vibrate(30);
-            }
-            
-            updateUI();
+            save();
+            render();
             updateStats();
         }
 
-        function decrement() {
-            if (state.counts[state.currentTasbih] > 0) {
-                state.counts[state.currentTasbih]--;
-                updateUI();
-            }
-        }
-
-        function undo() {
-            if (state.lastCount) {
-                state.counts[state.lastCount.tasbih] = state.lastCount.count;
-                state.lastCount = null;
-                updateUI();
-                showToast('Count undone');
-            }
-        }
-
-        function createRipple(e) {
-            const btn = elements.counterBtn;
-            const rect = btn.getBoundingClientRect();
-            const x = (e.clientX || e.touches?.[0]?.clientX || rect.left + rect.width / 2) - rect.left;
-            const y = (e.clientY || e.touches?.[0]?.clientY || rect.top + rect.height / 2) - rect.top;
+        // Keyboard
+        document.addEventListener('keydown', e => {
+            if (document.getElementById('statsModal').classList.contains('open') ||
+                document.getElementById('settingsModal').classList.contains('open')) return;
+            if (state.tasbihList.length === 0) return;
             
-            const ripple = document.createElement('div');
-            ripple.className = 'ripple';
-            ripple.style.left = x + 'px';
-            ripple.style.top = y + 'px';
-            ripple.style.width = '50px';
-            ripple.style.height = '50px';
-            btn.appendChild(ripple);
-            
-            setTimeout(() => ripple.remove(), 600);
-        }
-
-        function showToast(message) {
-            elements.toast.textContent = message;
-            elements.toast.classList.add('show');
-            setTimeout(() => elements.toast.classList.remove('show'), 2000);
-        }
-
-        function celebrate() {
-            const colors = ['#58A6FF', '#238636', '#F0883E', '#F778BA', '#A371F7'];
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDelay = Math.random() * 0.5 + 's';
-                confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
-                elements.celebration.appendChild(confetti);
-            }
-            setTimeout(() => {
-                elements.celebration.innerHTML = '';
-            }, 4000);
-        }
-
-        function updateStats() {
-            document.getElementById('statToday').textContent = getTodayTotal();
-            document.getElementById('statStreak').textContent = state.streak;
-            
-            const weekTotal = Object.values(state.history).slice(-7).reduce((sum, day) => {
-                return sum + Object.values(day).reduce((a, b) => a + b, 0);
-            }, 0);
-            document.getElementById('statWeek').textContent = weekTotal;
-            
-            const allTime = Object.values(state.history).reduce((sum, day) => {
-                return sum + Object.values(day).reduce((a, b) => a + b, 0);
-            }, 0) + getTodayTotal();
-            document.getElementById('statTotal').textContent = allTime;
-            
-            renderWeeklyChart();
-        }
-
-        function renderWeeklyChart() {
-            const container = document.getElementById('weeklyChart');
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const today = new Date();
-            
-            let maxCount = 1;
-            const weekData = [];
-            
-            for (let i = 6; i >= 0; i--) {
-                const date = new Date(today);
-                date.setDate(date.getDate() - i);
-                const dateStr = date.toDateString();
-                const dayData = state.history[dateStr] || {};
-                const count = Object.values(dayData).reduce((a, b) => a + b, 0);
-                weekData.push({ day: days[date.getDay()], count });
-                if (count > maxCount) maxCount = count;
-            }
-            
-            container.innerHTML = weekData.map(d => `
-                <div class="chart-bar">
-                    <div class="bar" style="height: ${(d.count / maxCount) * 100}px"></div>
-                    <span class="day">${d.day}</span>
-                </div>
-            `).join('');
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (elements.settingsModal.classList.contains('active') || 
-                elements.statsModal.classList.contains('active')) {
-                return;
-            }
-
             if (e.key === 'Enter') {
                 e.preventDefault();
                 increment();
             } else if (e.key === 'Backspace') {
                 e.preventDefault();
-                decrement();
+                if (state.counts[state.currentTasbih] > 0) {
+                    state.counts[state.currentTasbih]--;
+                    save();
+                    render();
+                }
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                undo();
+                if (lastCount) {
+                    state.counts[lastCount.id] = lastCount.count;
+                    lastCount = null;
+                    save();
+                    render();
+                    toast('Undone');
+                }
             }
         });
 
+        // Touch hold to decrement
         let pressTimer;
-        elements.counterBtn.addEventListener('mousedown', () => {
-            pressTimer = setTimeout(decrement, 500);
-        });
-        elements.counterBtn.addEventListener('mouseup', () => clearTimeout(pressTimer));
-        elements.counterBtn.addEventListener('mouseleave', () => clearTimeout(pressTimer));
-        
-        elements.counterBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
+        document.addEventListener('touchstart', e => {
+            if (e.target.id !== 'counterBtn') return;
             pressTimer = setTimeout(() => {
-                decrement();
-                showToast('Holding to decrease');
+                if (state.counts[state.currentTasbih] > 0) {
+                    state.counts[state.currentTasbih]--;
+                    save();
+                    render();
+                    toast('Hold to decrease');
+                }
             }, 500);
         });
-        elements.counterBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            clearTimeout(pressTimer);
-            increment(e);
-        });
-        
-        elements.counterBtn.addEventListener('click', (e) => {
-            if (!('ontouchstart' in window)) {
-                increment(e);
-            }
-        });
-        
-        let touchStartY = 0;
-        document.addEventListener('touchstart', (e) => {
-            touchStartY = e.touches[0].clientY;
-        });
-        document.addEventListener('touchend', (e) => {
-            const touchEndY = e.changedTouches[0].clientY;
-            if (touchStartY - touchEndY > 50) {
-                undo();
+        document.addEventListener('touchend', () => clearTimeout(pressTimer));
+
+        // Swipe to undo
+        let startY;
+        document.addEventListener('touchstart', e => startY = e.touches[0].clientY);
+        document.addEventListener('touchend', e => {
+            if (startY - e.changedTouches[0].clientY > 60 && lastCount) {
+                state.counts[lastCount.id] = lastCount.count;
+                lastCount = null;
+                save();
+                render();
+                toast('Undone');
             }
         });
 
+        // Add tasbih
+        function showAddTasbih() {
+            const container = document.getElementById('tasbihFormContainer');
+            container.innerHTML = `
+                <div class="tasbih-form">
+                    <input type="text" id="newName" placeholder="Name (e.g. SubhanAllah)">
+                    <input type="text" id="newArabic" class="arabic" placeholder="Arabic (optional)">
+                    <div class="tasbih-form-btns">
+                        <button class="btn btn-primary" onclick="addTasbih()">Add</button>
+                        <button class="btn" style="background:var(--surface-light);" onclick="hideAddTasbih()">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('newName').focus();
+        }
+
+        function hideAddTasbih() {
+            document.getElementById('tasbihFormContainer').innerHTML = '';
+        }
+
+        function addTasbih() {
+            const name = document.getElementById('newName').value.trim();
+            const arabic = document.getElementById('newArabic').value.trim();
+            if (!name) return toast('Enter a name');
+
+            const id = 't_' + Date.now();
+            const display = arabic || name.slice(0, 4);
+            
+            state.tasbihList.push({ id, name, arabic, display });
+            state.counts[id] = 0;
+            state.currentTasbih = id;
+            
+            hideAddTasbih();
+            renderCustomList();
+            save();
+            render();
+            toast('Tasbih added!');
+        }
+
+        function renderCustomList() {
+            const list = document.getElementById('customList');
+            list.innerHTML = state.tasbihList.map(t => `
+                <div class="custom-item">
+                    <input type="text" value="${t.name}" onchange="updateTasbih('${t.id}', 'name', this.value)">
+                    <input type="text" value="${t.arabic}" placeholder="Arabic" onchange="updateTasbih('${t.id}', 'arabic', this.value)">
+                    <button class="del-btn" onclick="deleteTasbih('${t.id}')">×</button>
+                </div>
+            `).join('');
+        }
+
+        function updateTasbih(id, field, value) {
+            const t = state.tasbihList.find(x => x.id === id);
+            if (t) {
+                t[field] = value;
+                if (field === 'arabic') t.display = value || t.name.slice(0,4);
+                save();
+                render();
+            }
+        }
+
+        function deleteTasbih(id) {
+            if (!confirm('Delete this tasbih?')) return;
+            state.tasbihList = state.tasbihList.filter(t => t.id !== id);
+            delete state.counts[id];
+            if (state.currentTasbih === id) {
+                state.currentTasbih = state.tasbihList[0]?.id || null;
+            }
+            renderCustomList();
+            save();
+            render();
+        }
+
+        // Stats
+        function updateStats() {
+            const todayTotal = Object.values(state.counts).reduce((a,b) => a+b, 0);
+            document.getElementById('statToday').textContent = todayTotal;
+            document.getElementById('statStreak').textContent = state.streak;
+            
+            const weekTotal = Object.values(state.history || {}).slice(-7).reduce((sum, day) => 
+                sum + Object.values(day || {}).reduce((a,b) => a+b, 0), 0);
+            document.getElementById('statWeek').textContent = weekTotal;
+            
+            const allTime = Object.values(state.history || {}).reduce((sum, day) => 
+                sum + Object.values(day || {}).reduce((a,b) => a+b, 0), 0) + todayTotal;
+            document.getElementById('statTotal').textContent = allTime;
+
+            // Chart
+            const days = ['S','M','T','W','T','F','S'];
+            const today = new Date();
+            let max = 1;
+            const data = [];
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                const key = d.toDateString();
+                const c = Object.values(state.history?.[key] || {}).reduce((a,b)=>a+b,0);
+                data.push({ day: days[d.getDay()], count: c });
+                if (c > max) max = c;
+            }
+            document.getElementById('chart').innerHTML = data.map(d => `
+                <div class="chart-bar">
+                    <div class="bar" style="height:${(d.count/max)*60 + 8}px"></div>
+                    <span class="day">${d.day}</span>
+                </div>
+            `).join('');
+        }
+
+        // Modals
         document.getElementById('statsBtn').addEventListener('click', () => {
             updateStats();
-            elements.statsModal.classList.add('active');
+            document.getElementById('statsModal').classList.add('open');
         });
-        document.getElementById('closeStats').addEventListener('click', () => {
-            elements.statsModal.classList.remove('active');
-        });
+        document.getElementById('closeStats').onclick = () => document.getElementById('statsModal').classList.remove('open');
 
         document.getElementById('settingsBtn').addEventListener('click', () => {
-            elements.settingsModal.classList.add('active');
-            document.getElementById('goalInput').value = state.settings.goal;
-            document.getElementById('soundToggle').classList.toggle('active', state.settings.sound);
-            document.getElementById('vibrateToggle').classList.toggle('active', state.settings.vibrate);
-            document.getElementById('addTasbihForm').style.display = 'none';
-            document.getElementById('showAddTasbih').style.display = 'flex';
-            renderCustomTasbihList();
+            document.getElementById('soundToggle').classList.toggle('on', state.sound);
+            document.getElementById('vibrateToggle').classList.toggle('on', state.vibrate);
+            document.getElementById('goalInput').value = state.goal;
+            renderCustomList();
+            hideAddTasbih();
+            document.getElementById('settingsModal').classList.add('open');
         });
-        document.getElementById('closeSettings').addEventListener('click', () => {
-            elements.settingsModal.classList.remove('active');
-        });
+        document.getElementById('closeSettings').onclick = () => document.getElementById('settingsModal').classList.remove('open');
 
-        document.getElementById('soundToggle').addEventListener('click', function() {
-            this.classList.toggle('active');
-            state.settings.sound = this.classList.contains('active');
-            if (state.settings.sound) {
-                playClickSound();
-            }
-            saveState();
-        });
-
-        document.getElementById('vibrateToggle').addEventListener('click', function() {
-            this.classList.toggle('active');
-            state.settings.vibrate = this.classList.contains('active');
-            saveState();
-        });
-
-        document.getElementById('goalInput').addEventListener('change', function() {
-            state.settings.goal = parseInt(this.value) || 100;
+        // Settings
+        document.getElementById('soundToggle').onclick = function() {
+            this.classList.toggle('on');
+            state.sound = this.classList.contains('on');
+            if (state.sound) playSound();
+            save();
+        };
+        document.getElementById('vibrateToggle').onclick = function() {
+            this.classList.toggle('on');
+            state.vibrate = this.classList.contains('on');
+            save();
+        };
+        document.getElementById('goalInput').onchange = function() {
+            state.goal = parseInt(this.value) || 100;
             state.goalReached = false;
-            saveState();
-            updateUI();
-        });
+            save();
+            render();
+        };
 
-        document.getElementById('addTasbihBtn').addEventListener('click', addNewTasbih);
-        document.getElementById('cancelAddTasbih').addEventListener('click', () => {
-            document.getElementById('addTasbihForm').style.display = 'none';
-            document.getElementById('showAddTasbih').style.display = 'flex';
-            document.getElementById('newTasbihName').value = '';
-            document.getElementById('newTasbihArabic').value = '';
-        });
-
-        document.getElementById('resetToday').addEventListener('click', () => {
+        document.getElementById('resetToday').onclick = () => {
             state.counts = {};
-            initCounts();
             state.goalReached = false;
-            updateUI();
-            showToast('Today\'s count reset');
-            elements.settingsModal.classList.remove('active');
-        });
+            save();
+            render();
+            document.getElementById('settingsModal').classList.remove('open');
+            toast('Reset');
+        };
+        document.getElementById('resetAll').onclick = () => {
+            if (!confirm('Delete all data?')) return;
+            localStorage.removeItem('tasbihPro');
+            state = { tasbihList: [], currentTasbih: null, counts: {}, history: {}, today: new Date().toDateString(), streak: 0, goal: 100, sound: false, vibrate: true };
+            render();
+            document.getElementById('settingsModal').classList.remove('open');
+            toast('All data deleted');
+        };
 
-        document.getElementById('resetAll').addEventListener('click', () => {
-            if (confirm('Are you sure? This will delete all your data.')) {
-                localStorage.removeItem('tasbihState');
-                state = {
-                    tasbihList: [],
-                    currentTasbih: null,
-                    counts: {},
-                    today: new Date().toDateString(),
-                    history: {},
-                    streak: 0,
-                    settings: { goal: 100, sound: false, vibrate: true },
-                    lastCount: null,
-                    goalReached: false
-                };
-                renderTasbihSelector();
-                renderCustomTasbihList();
-                updateUI();
-                showToast('All data reset');
-                elements.settingsModal.classList.remove('active');
-            }
-        });
-
-        [elements.statsModal, elements.settingsModal].forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
+        // Click outside to close modal
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', e => {
+                if (e.target === m) m.classList.remove('open');
             });
         });
 
-        loadState();
-        renderTasbihSelector();
-        updateUI();
+        // Init
+        load();
+        render();
     </script>
 </body>
 </html>
