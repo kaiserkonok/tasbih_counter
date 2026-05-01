@@ -626,8 +626,8 @@
             }
             const count = state.counts[state.currentTasbih] || 0;
             const todayTotal = Object.values(state.counts).reduce((a,b) => a+b, 0);
-            const percent = Math.min((todayTotal / state.goal) * 100, 100);
-            const offset = 176 - (176 * percent / 100);
+            const percent = state.goal > 0 ? Math.min((todayTotal / state.goal) * 100, 100) : 0;
+            const offset = state.goal > 0 ? 176 - (176 * percent / 100) : 176;
 
             main.innerHTML = `
                 <div class="current-tasbih-name">${current.name}</div>
@@ -644,7 +644,7 @@
                             <circle class="progress" cx="32" cy="32" r="28" style="stroke-dashoffset:${offset}"/>
                         </svg>
                         <div class="goal-text">
-                            <span class="percent">${Math.round(percent)}%</span>
+                            <span class="percent">${state.goal > 0 ? Math.round(percent) + '%' : '--'}</span>
                             <span class="label">Goal</span>
                         </div>
                     </div>
