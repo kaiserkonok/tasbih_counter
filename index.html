@@ -129,9 +129,32 @@
         .counter-btn .decrease-hint {
             position: absolute;
             bottom: 16px;
-            font-size: 16px;
+            font-size: 20px;
             color: var(--text-dim);
-            opacity: 0.5;
+            opacity: 0.6;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .counter-btn .decrease-hint:active {
+            background: var(--surface-light);
+            opacity: 1;
+        }
+
+        .decrease-btn {
+            font-size: 14px;
+            color: var(--text-dim);
+            padding: 8px 16px;
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid var(--surface-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .decrease-btn:active {
+            background: var(--surface-light);
+            transform: scale(0.95);
         }
 
         @media (min-width: 768px) {
@@ -641,8 +664,8 @@
                 <div class="current-tasbih-name">${current.name}</div>
                 <button class="counter-btn" id="counterBtn">
                     <span class="count">${count}</span>
-                    <span class="decrease-hint">−</span>
                 </button>
+                <span class="decrease-btn" id="decreaseBtn">− decrease</span>
                 <p class="hint">Tap to count • <kbd>Enter</kbd> +1 • <kbd>Backspace</kbd> -1 • <kbd>↑</kbd> undo</p>
                 
                 <div class="goal-card">
@@ -677,6 +700,18 @@
 
             // Events
             document.getElementById('counterBtn').addEventListener('click', increment);
+            
+            const decreaseBtn = document.getElementById('decreaseBtn');
+            if (decreaseBtn) {
+                decreaseBtn.addEventListener('click', () => {
+                    if (state.counts[state.currentTasbih] > 0) {
+                        state.counts[state.currentTasbih]--;
+                        save();
+                        render();
+                        updateStats();
+                    }
+                });
+            }
             
             document.querySelectorAll('.tasbih-pill[data-id]').forEach(btn => {
                 btn.addEventListener('click', () => {
