@@ -648,7 +648,7 @@
                             <span class="label">Goal</span>
                         </div>
                     </div>
-                    <div class="goal-info">
+                    <div class="goal-info" id="goalInfo">
                         <h3>Daily Goal</h3>
                         <p>${todayTotal} / ${state.goal} dhikr</p>
                     </div>
@@ -678,6 +678,19 @@
             const addPill = document.getElementById('addTasbihPill');
             if (addPill) {
                 addPill.addEventListener('click', window.showAddTasbih);
+            }
+
+            const goalInfo = document.getElementById('goalInfo');
+            if (goalInfo) {
+                goalInfo.style.cursor = 'pointer';
+                goalInfo.onclick = () => {
+                    const newGoal = prompt('Set daily goal:', state.goal);
+                    if (newGoal && parseInt(newGoal) > 0) {
+                        state.goal = parseInt(newGoal);
+                        save();
+                        render();
+                    }
+                };
             }
 
             // Check goal
