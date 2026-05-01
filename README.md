@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSI+PHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjI4IiBoZWlnaHQ9IjI4IiByeD0iMTQiIGFyY29yZT0iY2lyY2xlIiBzdHJva2U9InVybCgjZ3JhZCkiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xNiA4djhMNjIuNSAxNSIgc3Ryb2tlPSIjNThBNkZGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjMiIGZpbGw9IiNGMDg4M0UiLz48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwIiB5MT0iMCIgeDI9IjMyIiB5Mj0iMzIiPjxzdG9wIHN0b3AtY29sb3I9IiM1OEERNkYiLz48c3RvcCBzdG9wLW9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0YwODgzRSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjwvc3ZnPg==" alt="Tasbih Pro" width="60" />
+  <img src="logo.svg" alt="Tasbih Pro" width="60" />
   <br/>
   Tasbih Pro
 </h1>
