@@ -492,6 +492,15 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        // Default tasbihs
+        const DEFAULT_TASBIH = [
+            { id: 'subhanallah', name: 'SubhanAllah', arabic: 'سُبْحَانَ الله', display: 'سبحان' },
+            { id: 'alhmadulillah', name: 'Alhmadulillah', arabic: 'الْحَمْدُ لِلَّهِ', display: 'الحمد' },
+            { id: 'allahakbar', name: 'Allahu Akbar', arabic: 'الله أَكْبَرُ', display: 'الله أكبر' },
+            { id: 'lailahaillallah', name: 'La ilaha illallah', arabic: 'لَا إِلَهَ إِلَّا اللَّهُ', display: 'لا إله' },
+            { id: 'astaghfirullah', name: 'Astaghfirullah', arabic: 'أَسْتَغْفِرُ اللَّهَ', display: 'أستغفر' }
+        ];
+
         // State
         let state = {
             tasbihList: [],
@@ -550,7 +559,27 @@
                         parsed.streak = streak;
                     }
                     state = { ...state, ...parsed };
+                    
+                    // Migrate old tasbihs from counts keys
+                    if (state.tasbihList.length === 0 && state.counts && Object.keys(state.counts).length > 0) {
+                        const existingIds = Object.keys(state.counts);
+                        state.tasbihList = DEFAULT_TASBIH.filter(t => existingIds.includes(t.id));
+                        if (state.tasbihList.length === 0) {
+                            state.tasbihList = [...DEFAULT_TASBIH];
+                            state.counts = {};
+                            DEFAULT_TASBIH.forEach(t => state.counts[t.id] = 0);
+                        }
+                        state.currentTasbih = state.tasbihList[0].id;
+                    }
                 } catch(e) {}
+            }
+            
+            // If still no tasbihs, add defaults
+            if (state.tasbihList.length === 0) {
+                state.tasbihList = [...DEFAULT_TASBIH];
+                state.currentTasbih = DEFAULT_TASBIH[0].id;
+                DEFAULT_TASBIH.forEach(t => state.counts[t.id] = 0);
+                save();
             }
         }
 
@@ -631,7 +660,7 @@
                             ${t.arabic ? `<span class="pill-arabic">${t.display || t.name.slice(0,3)}</span>` : ''}${t.name}
                         </button>
                     `).join('')}
-                    <button class="tasbih-pill add-pill" onclick="showAddTasbih()">+</button>
+                    <button class="tasbih-pill add-pill" id="addTasbihPill">+</button>
                 </div>
             `;
 
@@ -645,6 +674,11 @@
                     render();
                 });
             });
+
+            const addPill = document.getElementById('addTasbihPill');
+            if (addPill) {
+                addPill.addEventListener('click', window.showAddTasbih);
+            }
 
             // Check goal
             if (todayTotal >= state.goal && !state.goalReached) {
@@ -728,26 +762,28 @@
         });
 
         // Add tasbih
-        function showAddTasbih() {
+        window.showAddTasbih = function() {
             const container = document.getElementById('tasbihFormContainer');
             container.innerHTML = `
                 <div class="tasbih-form">
                     <input type="text" id="newName" placeholder="Name (e.g. SubhanAllah)">
                     <input type="text" id="newArabic" class="arabic" placeholder="Arabic (optional)">
                     <div class="tasbih-form-btns">
-                        <button class="btn btn-primary" onclick="addTasbih()">Add</button>
-                        <button class="btn" style="background:var(--surface-light);" onclick="hideAddTasbih()">Cancel</button>
+                        <button class="btn btn-primary" id="addTasbihBtn">Add</button>
+                        <button class="btn" style="background:var(--surface-light);" id="cancelAddTasbih">Cancel</button>
                     </div>
                 </div>
             `;
             document.getElementById('newName').focus();
-        }
+            document.getElementById('addTasbihBtn').onclick = window.addTasbih;
+            document.getElementById('cancelAddTasbih').onclick = window.hideAddTasbih;
+        };
 
-        function hideAddTasbih() {
+        window.hideAddTasbih = function() {
             document.getElementById('tasbihFormContainer').innerHTML = '';
-        }
+        };
 
-        function addTasbih() {
+        window.addTasbih = function() {
             const name = document.getElementById('newName').value.trim();
             const arabic = document.getElementById('newArabic').value.trim();
             if (!name) return toast('Enter a name');
@@ -759,25 +795,25 @@
             state.counts[id] = 0;
             state.currentTasbih = id;
             
-            hideAddTasbih();
+            window.hideAddTasbih();
             renderCustomList();
             save();
             render();
             toast('Tasbih added!');
-        }
+        };
 
         function renderCustomList() {
             const list = document.getElementById('customList');
             list.innerHTML = state.tasbihList.map(t => `
                 <div class="custom-item">
-                    <input type="text" value="${t.name}" onchange="updateTasbih('${t.id}', 'name', this.value)">
-                    <input type="text" value="${t.arabic}" placeholder="Arabic" onchange="updateTasbih('${t.id}', 'arabic', this.value)">
-                    <button class="del-btn" onclick="deleteTasbih('${t.id}')">×</button>
+                    <input type="text" value="${t.name}" onchange="window.updateTasbih('${t.id}', 'name', this.value)">
+                    <input type="text" value="${t.arabic}" placeholder="Arabic" onchange="window.updateTasbih('${t.id}', 'arabic', this.value)">
+                    <button class="del-btn" onclick="window.deleteTasbih('${t.id}')">×</button>
                 </div>
             `).join('');
         }
 
-        function updateTasbih(id, field, value) {
+        window.updateTasbih = function(id, field, value) {
             const t = state.tasbihList.find(x => x.id === id);
             if (t) {
                 t[field] = value;
@@ -785,9 +821,9 @@
                 save();
                 render();
             }
-        }
+        };
 
-        function deleteTasbih(id) {
+        window.deleteTasbih = function(id) {
             if (!confirm('Delete this tasbih?')) return;
             state.tasbihList = state.tasbihList.filter(t => t.id !== id);
             delete state.counts[id];
@@ -797,7 +833,7 @@
             renderCustomList();
             save();
             render();
-        }
+        };
 
         // Stats
         function updateStats() {
