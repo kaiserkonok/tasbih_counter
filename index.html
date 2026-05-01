@@ -494,11 +494,11 @@
     <script>
         // Default tasbihs
         const DEFAULT_TASBIH = [
-            { id: 'subhanallah', name: 'SubhanAllah', arabic: 'سُبْحَانَ الله', display: 'سبحان' },
-            { id: 'alhmadulillah', name: 'Alhmadulillah', arabic: 'الْحَمْدُ لِلَّهِ', display: 'الحمد' },
-            { id: 'allahakbar', name: 'Allahu Akbar', arabic: 'الله أَكْبَرُ', display: 'الله أكبر' },
-            { id: 'lailahaillallah', name: 'La ilaha illallah', arabic: 'لَا إِلَهَ إِلَّا اللَّهُ', display: 'لا إله' },
-            { id: 'astaghfirullah', name: 'Astaghfirullah', arabic: 'أَسْتَغْفِرُ اللَّهَ', display: 'أستغفر' }
+            { id: 'subhanallah', name: 'SubhanAllah' },
+            { id: 'alhmadulillah', name: 'Alhmadulillah' },
+            { id: 'allahakbar', name: 'Allahu Akbar' },
+            { id: 'lailahaillallah', name: 'La ilaha illallah' },
+            { id: 'astaghfirullah', name: 'Astaghfirullah' }
         ];
 
         // State
@@ -783,7 +783,6 @@
             container.innerHTML = `
                 <div class="tasbih-form">
                     <input type="text" id="newName" placeholder="Name (e.g. SubhanAllah)">
-                    <input type="text" id="newArabic" class="arabic" placeholder="Arabic (optional)">
                     <div class="tasbih-form-btns">
                         <button class="btn btn-primary" id="addTasbihBtn">Add</button>
                         <button class="btn" style="background:var(--surface-light);" id="cancelAddTasbih">Cancel</button>
@@ -801,7 +800,7 @@
 
         window.addTasbih = function() {
             const name = document.getElementById('newName').value.trim();
-            const arabic = document.getElementById('newArabic').value.trim();
+            const arabic = '';
             if (!name) return toast('Enter a name');
 
             const id = 't_' + Date.now();
@@ -823,7 +822,6 @@
             list.innerHTML = state.tasbihList.map(t => `
                 <div class="custom-item">
                     <input type="text" value="${t.name}" onchange="window.updateTasbih('${t.id}', 'name', this.value)">
-                    <input type="text" value="${t.arabic}" placeholder="Arabic" onchange="window.updateTasbih('${t.id}', 'arabic', this.value)">
                     <button class="del-btn" onclick="window.deleteTasbih('${t.id}')">×</button>
                 </div>
             `).join('');
