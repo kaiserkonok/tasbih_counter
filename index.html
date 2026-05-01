@@ -631,11 +631,13 @@
 
             main.innerHTML = `
                 <div class="current-tasbih-name">${current.name}</div>
-                <button class="counter-btn" id="counterBtn">
-                    <span class="arabic">${current.arabic || ''}</span>
-                    <span class="count">${count}</span>
-                </button>
-                <p class="hint">Tap to count • <kbd>Enter</kbd> +1 • <kbd>Backspace</kbd> -1</p>
+                <div style="display:flex;align-items:center;gap:20px;">
+                    <button class="counter-btn" id="decreaseBtn" style="width:60px;height:60px;border-radius:50%;font-size:24px;flex-shrink:0;">−</button>
+                    <button class="counter-btn" id="counterBtn">
+                        <span class="count">${count}</span>
+                    </button>
+                </div>
+                <p class="hint">Tap to count • Hold to decrease • <kbd>Enter</kbd> +1 • <kbd>Backspace</kbd> -1</p>
                 
                 <div class="goal-card">
                     <div class="goal-ring">
@@ -669,6 +671,18 @@
 
             // Events
             document.getElementById('counterBtn').addEventListener('click', increment);
+            
+            const decreaseBtn = document.getElementById('decreaseBtn');
+            if (decreaseBtn) {
+                decreaseBtn.addEventListener('click', () => {
+                    if (state.counts[state.currentTasbih] > 0) {
+                        state.counts[state.currentTasbih]--;
+                        save();
+                        render();
+                        updateStats();
+                    }
+                });
+            }
             
             document.querySelectorAll('.tasbih-pill[data-id]').forEach(btn => {
                 btn.addEventListener('click', () => {
