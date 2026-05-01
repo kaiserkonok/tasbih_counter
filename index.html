@@ -476,7 +476,7 @@
                 </div>
                 <div class="setting-row">
                     <div><h4>Daily Goal</h4><p>Dhikr target</p></div>
-                    <input type="number" class="goal-input" id="goalInput" value="100" min="1">
+                    <input type="number" class="goal-input" id="goalInput" min="1" placeholder="Set goal">
                 </div>
 
                 <h3 style="font-size:14px;color:var(--text-dim);margin:20px 0 12px;">Custom Tasbih</h3>
@@ -509,7 +509,7 @@
             history: {},
             today: new Date().toDateString(),
             streak: 0,
-            goal: 100,
+            goal: 0,  // 0 means not set yet
             sound: false,
             vibrate: true
         };
@@ -650,7 +650,9 @@
                     </div>
                     <div class="goal-info">
                         <h3>Daily Goal</h3>
-                        <p>${todayTotal} / ${state.goal} dhikr</p>
+                        ${state.goal > 0 
+                            ? `<p>${todayTotal} / ${state.goal} dhikr</p>` 
+                            : `<p style="cursor:pointer;color:var(--primary);" id="setGoalBtn">Tap to set your goal →</p>`}
                     </div>
                 </div>
 
@@ -678,6 +680,18 @@
             const addPill = document.getElementById('addTasbihPill');
             if (addPill) {
                 addPill.addEventListener('click', window.showAddTasbih);
+            }
+
+            const setGoalBtn = document.getElementById('setGoalBtn');
+            if (setGoalBtn) {
+                setGoalBtn.addEventListener('click', () => {
+                    const newGoal = prompt('Set your daily dhikr goal:', '100');
+                    if (newGoal && parseInt(newGoal) > 0) {
+                        state.goal = parseInt(newGoal);
+                        save();
+                        render();
+                    }
+                });
             }
 
             // Check goal
