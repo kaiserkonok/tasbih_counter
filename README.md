@@ -9,6 +9,9 @@
 </p>
 
 <p align="center">
+  <a href="https://kaiserkonok.github.io/tasbih_counter/">
+    <img src="https://img.shields.io/badge/Live%20Demo-238636?style=for-the-badge" alt="Live Demo">
+  </a>
   <a href="https://github.com/anomalyco/opencode">
     <img src="https://img.shields.io/badge/Made%20with-HTML%20%26%20CSS-2541b2?style=for-the-badge&logo=html5" alt="HTML/CSS">
   </a>
@@ -38,12 +41,12 @@
 
 ## 🚀 Quick Start
 
+[**Try it now →**](https://kaiserkonok.github.io/tasbih_counter/)
+
+Or locally:
 ```bash
-# Just open in browser - no installation needed!
 open index.html
 ```
-
-Or simply drag `index.html` into your browser.
 
 ---
 
