@@ -855,6 +855,7 @@
             }, 500);
         });
         document.addEventListener('touchend', () => clearTimeout(pressTimer));
+        document.addEventListener('touchmove', () => clearTimeout(pressTimer));
 
         // Swipe to undo
         let startY;
