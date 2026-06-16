@@ -568,7 +568,8 @@
             history: {},
             today: new Date().toDateString(),
             streak: 0,
-            goal: 100,  // Default goal
+            goal: 100,
+            goalReached: false,
             sound: false,
             vibrate: true
         };
@@ -1023,7 +1024,7 @@
         document.getElementById('resetAll').onclick = () => {
             if (!confirm('Delete all data?')) return;
             localStorage.removeItem('tasbihPro');
-            state = { tasbihList: [], currentTasbih: null, counts: {}, history: {}, today: new Date().toDateString(), streak: 0, goal: 100, sound: false, vibrate: true };
+            state = { tasbihList: [], currentTasbih: null, counts: {}, history: {}, today: new Date().toDateString(), streak: 0, goal: 100, goalReached: false, sound: false, vibrate: true };
             render();
             document.getElementById('settingsModal').classList.remove('open');
             toast('All data deleted');
