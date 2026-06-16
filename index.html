@@ -551,11 +551,14 @@
         // Default tasbihs
         const DEFAULT_TASBIH = [
             { id: 'subhanallah', name: 'SubhanAllah' },
-            { id: 'alhmadulillah', name: 'Alhmadulillah' },
-            { id: 'allahakbar', name: 'Allahu Akbar' },
+            { id: 'alhamdulillah', name: 'Alhamdulillah' },
+            { id: 'allahuakbar', name: 'Allahu Akbar' },
             { id: 'lailahaillallah', name: 'La ilaha illallah' },
             { id: 'astaghfirullah', name: 'Astaghfirullah' }
         ];
+
+        // Migration map for old misspelled IDs → correct IDs
+        const ID_MIGRATION = { alhmadulillah: 'alhamdulillah', allahakbar: 'allahuakbar' };
 
         // State
         let state = {
@@ -615,7 +618,27 @@
                         parsed.streak = streak;
                     }
                     state = { ...state, ...parsed };
-                    
+
+                    // Migrate misspelled IDs to correct IDs
+                    for (const [oldId, newId] of Object.entries(ID_MIGRATION)) {
+                        if (state.counts && state.counts[oldId] !== undefined) {
+                            state.counts[newId] = (state.counts[newId] || 0) + state.counts[oldId];
+                            delete state.counts[oldId];
+                        }
+                        if (state.history) {
+                            for (const day of Object.keys(state.history)) {
+                                if (state.history[day][oldId] !== undefined) {
+                                    state.history[day][newId] = (state.history[day][newId] || 0) + state.history[day][oldId];
+                                    delete state.history[day][oldId];
+                                }
+                            }
+                        }
+                        state.tasbihList = state.tasbihList.map(t =>
+                            t.id === oldId ? { ...t, id: newId, name: DEFAULT_TASBIH.find(d => d.id === newId)?.name || t.name } : t
+                        );
+                        if (state.currentTasbih === oldId) state.currentTasbih = newId;
+                    }
+
                     // Migrate old tasbihs from counts keys
                     if (state.tasbihList.length === 0 && state.counts && Object.keys(state.counts).length > 0) {
                         const existingIds = Object.keys(state.counts);
