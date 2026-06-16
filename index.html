@@ -986,7 +986,7 @@
             document.getElementById('vibrateToggle').classList.toggle('on', state.vibrate);
             document.getElementById('goalInput').value = state.goal;
             renderCustomList();
-            hideAddTasbih();
+            window.hideAddTasbih();
             document.getElementById('settingsModal').classList.add('open');
             syncBodyScroll();
         });
