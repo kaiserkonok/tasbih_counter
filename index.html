@@ -940,7 +940,8 @@
                 const d = new Date(today);
                 d.setDate(d.getDate() - i);
                 const key = d.toDateString();
-                const c = Object.values(state.history?.[key] || {}).reduce((a,b)=>a+b,0);
+                const dayData = key === state.today ? state.counts : (state.history?.[key] || {});
+                const c = Object.values(dayData).reduce((a,b)=>a+b,0);
                 data.push({ day: days[d.getDay()], count: c });
                 if (c > max) max = c;
             }
