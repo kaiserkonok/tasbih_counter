@@ -737,6 +737,7 @@
             if (decreaseBtn) {
                 decreaseBtn.addEventListener('click', () => {
                     if (state.counts[state.currentTasbih] > 0) {
+                        lastCount = { id: state.currentTasbih, count: state.counts[state.currentTasbih] };
                         state.counts[state.currentTasbih]--;
                         save();
                         render();
@@ -808,6 +809,7 @@
             } else if (e.key === 'Backspace') {
                 e.preventDefault();
                 if (state.counts[state.currentTasbih] > 0) {
+                    lastCount = { id: state.currentTasbih, count: state.counts[state.currentTasbih] };
                     state.counts[state.currentTasbih]--;
                     save();
                     render();
