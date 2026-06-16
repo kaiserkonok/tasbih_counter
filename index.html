@@ -844,9 +844,13 @@
 
         // Swipe to undo
         let startY;
-        document.addEventListener('touchstart', e => startY = e.touches[0].clientY);
+        let swipeTarget = null;
+        document.addEventListener('touchstart', e => {
+            startY = e.touches[0].clientY;
+            swipeTarget = e.target.closest('#counterBtn') || e.target.closest('.decrease-btn');
+        });
         document.addEventListener('touchend', e => {
-            if (startY - e.changedTouches[0].clientY > 60 && lastCount) {
+            if (swipeTarget && startY - e.changedTouches[0].clientY > 60 && lastCount) {
                 state.counts[lastCount.id] = lastCount.count;
                 lastCount = null;
                 save();
