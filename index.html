@@ -689,7 +689,6 @@
                 state.currentTasbih = current.id;
             }
             const count = state.counts[state.currentTasbih] || 0;
-            const todayTotal = Object.values(state.counts).reduce((a,b) => a+b, 0);
             const percent = Math.min((count / state.goal) * 100, 100);
             const offset = 176 - (176 * percent / 100);
 
@@ -773,7 +772,7 @@
             }
 
             // Check goal
-            if (todayTotal >= state.goal && !state.goalReached) {
+            if (count >= state.goal && !state.goalReached) {
                 state.goalReached = true;
                 celebrate();
             }
