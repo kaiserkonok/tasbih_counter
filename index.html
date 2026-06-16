@@ -585,13 +585,17 @@
             currentTasbih: null,
             counts: {},
             history: {},
+            goals: {},
+            goalsReached: {},
             today: new Date().toDateString(),
             streak: 0,
-            goal: 100,
-            goalReached: false,
             sound: false,
             vibrate: true
         };
+
+        function currentGoal() {
+            return state.goals[state.currentTasbih] || 100;
+        }
 
         // Audio
         let audioCtx = null;
@@ -639,6 +643,24 @@
                     }
                     state = { ...state, ...parsed };
 
+                    // Migrate old single goal → per-tasbih goals
+                    if (parsed.goal !== undefined && (!parsed.goals || Object.keys(parsed.goals).length === 0)) {
+                        state.goals = {};
+                        state.tasbihList.forEach(t => {
+                            state.goals[t.id] = parsed.goal;
+                        });
+                    }
+                    if (parsed.goalReached !== undefined && (!parsed.goalsReached || Object.keys(parsed.goalsReached).length === 0)) {
+                        state.goalsReached = {};
+                        if (parsed.goalReached) {
+                            state.tasbihList.forEach(t => {
+                                state.goalsReached[t.id] = true;
+                            });
+                        }
+                    }
+                    delete state.goal;
+                    delete state.goalReached;
+
                     // Migrate misspelled IDs to correct IDs
                     for (const [oldId, newId] of Object.entries(ID_MIGRATION)) {
                         if (state.counts && state.counts[oldId] !== undefined) {
@@ -677,9 +699,17 @@
             if (state.tasbihList.length === 0) {
                 state.tasbihList = [...DEFAULT_TASBIH];
                 state.currentTasbih = DEFAULT_TASBIH[0].id;
-                DEFAULT_TASBIH.forEach(t => state.counts[t.id] = 0);
+                DEFAULT_TASBIH.forEach(t => {
+                    state.counts[t.id] = 0;
+                    if (!state.goals[t.id]) state.goals[t.id] = 100;
+                });
                 save();
             }
+
+            // Ensure all tasbihs have a goal
+            state.tasbihList.forEach(t => {
+                if (!state.goals[t.id]) state.goals[t.id] = 100;
+            });
         }
 
         // Toast
@@ -724,7 +754,7 @@
                 state.currentTasbih = current.id;
             }
             const count = state.counts[state.currentTasbih] || 0;
-            const percent = Math.min((count / state.goal) * 100, 100);
+            const percent = Math.min((count / currentGoal()) * 100, 100);
             const offset = 176 - (176 * percent / 100);
 
             main.innerHTML = `
@@ -754,7 +784,7 @@
                             <h3>Daily Goal</h3>
                             <span style="font-size:12px;cursor:pointer;" id="editGoalBtn">✏️</span>
                         </div>
-                        <p>${count} / ${state.goal} dhikr</p>
+                        <p>${count} / ${currentGoal()} dhikr</p>
                     </div>
                 </div>
 
@@ -790,7 +820,7 @@
                     if (state.counts[state.currentTasbih] > 0) {
                         lastCount = { id: state.currentTasbih, count: state.counts[state.currentTasbih] };
                         state.counts[state.currentTasbih] = 0;
-                        state.goalReached = false;
+                        state.goalsReached[state.currentTasbih] = false;
                         save();
                         render();
                         updateStats();
@@ -816,9 +846,9 @@
             if (editGoalBtn) {
                 editGoalBtn.onclick = (e) => {
                     e.stopPropagation();
-                    const newGoal = prompt('Set daily goal:', state.goal);
+                    const newGoal = prompt('Set daily goal:', currentGoal());
                     if (newGoal && parseInt(newGoal) > 0) {
-                        state.goal = parseInt(newGoal);
+                        state.goals[state.currentTasbih] = parseInt(newGoal);
                         save();
                         render();
                     }
@@ -826,8 +856,8 @@
             }
 
             // Check goal
-            if (count >= state.goal && !state.goalReached) {
-                state.goalReached = true;
+            if (count >= currentGoal() && !state.goalsReached[state.currentTasbih]) {
+                state.goalsReached[state.currentTasbih] = true;
                 celebrate();
             }
         }
@@ -943,6 +973,7 @@
             
             state.tasbihList.push({ id, name, arabic, display });
             state.counts[id] = 0;
+            state.goals[id] = 100;
             state.currentTasbih = id;
             
             window.hideAddTasbih();
@@ -1047,7 +1078,7 @@
         document.getElementById('settingsBtn').addEventListener('click', () => {
             document.getElementById('soundToggle').classList.toggle('on', state.sound);
             document.getElementById('vibrateToggle').classList.toggle('on', state.vibrate);
-            document.getElementById('goalInput').value = state.goal;
+            document.getElementById('goalInput').value = currentGoal();
             renderCustomList();
             window.hideAddTasbih();
             document.getElementById('settingsModal').classList.add('open');
@@ -1071,15 +1102,15 @@
             save();
         };
         document.getElementById('goalInput').onchange = function() {
-            state.goal = parseInt(this.value) || 100;
-            state.goalReached = false;
+            state.goals[state.currentTasbih] = parseInt(this.value) || 100;
+            state.goalsReached[state.currentTasbih] = false;
             save();
             render();
         };
 
         document.getElementById('resetToday').onclick = () => {
             state.counts = {};
-            state.goalReached = false;
+            state.goalsReached = {};
             save();
             render();
             document.getElementById('settingsModal').classList.remove('open');
@@ -1089,7 +1120,7 @@
         document.getElementById('resetAll').onclick = () => {
             if (!confirm('Delete all data?')) return;
             localStorage.removeItem('tasbihPro');
-            state = { tasbihList: [], currentTasbih: null, counts: {}, history: {}, today: new Date().toDateString(), streak: 0, goal: 100, goalReached: false, sound: false, vibrate: true };
+            state = { tasbihList: [], currentTasbih: null, counts: {}, history: {}, goals: {}, goalsReached: {}, today: new Date().toDateString(), streak: 0, sound: false, vibrate: true };
             render();
             document.getElementById('settingsModal').classList.remove('open');
             syncBodyScroll();
