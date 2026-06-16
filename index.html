@@ -894,11 +894,15 @@
             toast('Tasbih added!');
         };
 
+        function escapeAttr(s) {
+            return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
         function renderCustomList() {
             const list = document.getElementById('customList');
             list.innerHTML = state.tasbihList.map(t => `
                 <div class="custom-item">
-                    <input type="text" value="${t.name}" onchange="window.updateTasbih('${t.id}', 'name', this.value)">
+                    <input type="text" value="${escapeAttr(t.name)}" onchange="window.updateTasbih('${t.id}', 'name', this.value)">
                     <button class="del-btn" onclick="window.deleteTasbih('${t.id}')">×</button>
                 </div>
             `).join('');
