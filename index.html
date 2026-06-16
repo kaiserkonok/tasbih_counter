@@ -932,7 +932,8 @@
         // Stats
         function updateStats() {
             const todayTotal = Object.values(state.counts).reduce((a,b) => a+b, 0);
-            document.getElementById('statToday').textContent = todayTotal;
+            const currentCount = state.counts[state.currentTasbih] || 0;
+            document.getElementById('statToday').textContent = currentCount;
             document.getElementById('statStreak').textContent = state.streak;
             
             const weekTotal = Object.keys(state.history || {}).sort().slice(-7).reduce((sum, day) => 
