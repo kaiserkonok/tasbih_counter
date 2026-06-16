@@ -690,7 +690,7 @@
             }
             const count = state.counts[state.currentTasbih] || 0;
             const todayTotal = Object.values(state.counts).reduce((a,b) => a+b, 0);
-            const percent = Math.min((todayTotal / state.goal) * 100, 100);
+            const percent = Math.min((count / state.goal) * 100, 100);
             const offset = 176 - (176 * percent / 100);
 
             main.innerHTML = `
@@ -717,7 +717,7 @@
                             <h3>Daily Goal</h3>
                             <span style="font-size:12px;cursor:pointer;" id="editGoalBtn">✏️</span>
                         </div>
-                        <p>${todayTotal} / ${state.goal} dhikr</p>
+                        <p>${count} / ${state.goal} dhikr</p>
                     </div>
                 </div>
 
