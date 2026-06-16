@@ -153,6 +153,21 @@
             transform: scale(0.95);
         }
 
+        .reset-btn {
+            font-size: 14px;
+            color: var(--text-dim);
+            padding: 8px 16px;
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid var(--surface-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .reset-btn:active {
+            background: var(--surface-light);
+            transform: scale(0.95);
+        }
+
         @media (min-width: 768px) {
             .counter-btn .count { font-size: 56px; }
         }
@@ -697,7 +712,10 @@
                 <button class="counter-btn" id="counterBtn">
                     <span class="count">${count}</span>
                 </button>
-                <span class="decrease-btn" id="decreaseBtn">− decrease</span>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <span class="decrease-btn" id="decreaseBtn">− decrease</span>
+                    <span class="reset-btn" id="resetBtn">↺ reset</span>
+                </div>
                 <p class="hint">Tap to count • <kbd>Enter</kbd> +1 • <kbd>Backspace</kbd> -1 • <kbd>↑</kbd> undo</p>
                 
                 <div class="goal-card">
@@ -742,6 +760,21 @@
                         save();
                         render();
                         updateStats();
+                    }
+                });
+            }
+
+            const resetBtn = document.getElementById('resetBtn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    if (state.counts[state.currentTasbih] > 0) {
+                        lastCount = { id: state.currentTasbih, count: state.counts[state.currentTasbih] };
+                        state.counts[state.currentTasbih] = 0;
+                        state.goalReached = false;
+                        save();
+                        render();
+                        updateStats();
+                        toast('Count reset');
                     }
                 });
             }
