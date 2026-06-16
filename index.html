@@ -608,10 +608,10 @@
                         parsed.today = today;
                         // calc streak
                         let streak = 0;
-                        Object.keys(parsed.history || {}).sort().reverse().forEach(d => {
+                        for (const d of Object.keys(parsed.history || {}).sort().reverse()) {
                             const c = Object.values(parsed.history[d] || {}).reduce((a,b)=>a+b,0);
-                            if (c > 0) streak++; else return;
-                        });
+                            if (c > 0) streak++; else break;
+                        }
                         parsed.streak = streak;
                     }
                     state = { ...state, ...parsed };
