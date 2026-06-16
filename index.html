@@ -979,11 +979,23 @@
         }
 
         // Modals
+        function anyModalOpen() {
+            return document.getElementById('statsModal').classList.contains('open') ||
+                   document.getElementById('settingsModal').classList.contains('open');
+        }
+        function syncBodyScroll() {
+            document.body.style.overflow = anyModalOpen() ? 'hidden' : '';
+        }
+
         document.getElementById('statsBtn').addEventListener('click', () => {
             updateStats();
             document.getElementById('statsModal').classList.add('open');
+            syncBodyScroll();
         });
-        document.getElementById('closeStats').onclick = () => document.getElementById('statsModal').classList.remove('open');
+        document.getElementById('closeStats').onclick = () => {
+            document.getElementById('statsModal').classList.remove('open');
+            syncBodyScroll();
+        };
 
         document.getElementById('settingsBtn').addEventListener('click', () => {
             document.getElementById('soundToggle').classList.toggle('on', state.sound);
@@ -992,8 +1004,12 @@
             renderCustomList();
             hideAddTasbih();
             document.getElementById('settingsModal').classList.add('open');
+            syncBodyScroll();
         });
-        document.getElementById('closeSettings').onclick = () => document.getElementById('settingsModal').classList.remove('open');
+        document.getElementById('closeSettings').onclick = () => {
+            document.getElementById('settingsModal').classList.remove('open');
+            syncBodyScroll();
+        };
 
         // Settings
         document.getElementById('soundToggle').onclick = function() {
@@ -1020,6 +1036,7 @@
             save();
             render();
             document.getElementById('settingsModal').classList.remove('open');
+            syncBodyScroll();
             toast('Reset');
         };
         document.getElementById('resetAll').onclick = () => {
@@ -1028,13 +1045,17 @@
             state = { tasbihList: [], currentTasbih: null, counts: {}, history: {}, today: new Date().toDateString(), streak: 0, goal: 100, goalReached: false, sound: false, vibrate: true };
             render();
             document.getElementById('settingsModal').classList.remove('open');
+            syncBodyScroll();
             toast('All data deleted');
         };
 
         // Click outside to close modal
         document.querySelectorAll('.modal-overlay').forEach(m => {
             m.addEventListener('click', e => {
-                if (e.target === m) m.classList.remove('open');
+                if (e.target === m) {
+                    m.classList.remove('open');
+                    syncBodyScroll();
+                }
             });
         });
 
