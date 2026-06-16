@@ -947,8 +947,8 @@
             document.getElementById('statToday').textContent = todayTotal;
             document.getElementById('statStreak').textContent = state.streak;
             
-            const weekTotal = Object.values(state.history || {}).slice(-7).reduce((sum, day) => 
-                sum + Object.values(day || {}).reduce((a,b) => a+b, 0), 0);
+            const weekTotal = Object.keys(state.history || {}).sort().slice(-7).reduce((sum, day) => 
+                sum + Object.values(state.history[day] || {}).reduce((a,b) => a+b, 0), 0);
             document.getElementById('statWeek').textContent = weekTotal;
             
             const allTime = Object.values(state.history || {}).reduce((sum, day) => 
