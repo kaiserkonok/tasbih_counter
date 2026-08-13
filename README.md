@@ -35,7 +35,7 @@
 | 🕌 **Arabic + meaning** | Every dhikr shown in beautiful Amiri Arabic with transliteration and its English meaning |
 | 🌙 **Serene design** | A calm night-sky palette, warm gold light, and a gentle "breathing" counter made for focus |
 | 🎯 **Per-dhikr goals** | Set a daily target for each dhikr and watch the golden progress ring fill |
-| 📊 **Statistics** | Today's total, day streak, this week, all-time count, and a 7-day chart |
+| 📊 **Per-dhikr Journey** | Every dhikr has its own Today, day streak, this-week, and lifetime totals — plus its 7-day chart and a lifetime-by-dhikr breakdown |
 | ✏️ **Custom dhikr** | Add your own dhikr with Arabic, meaning, and beads-per-round |
 | 🔔 **Sound & haptics** | An optional soft chime and gentle vibration on every count |
 | 📴 **Offline PWA** | Installs to your home screen and works with no internet — all data stays on your device |

@@ -263,6 +263,18 @@
         .chart-bar.today .bar { background: linear-gradient(180deg, var(--emerald), var(--emerald-deep)); box-shadow: 0 0 10px rgba(61,220,151,0.4); }
         .chart-bar .day { font-size: 10px; color: var(--text-dim); }
 
+        .journey-dhikr { text-align: center; margin-bottom: 18px; }
+        .journey-dhikr .ar { font-family: 'Amiri', serif; font-size: 28px; color: var(--gold-soft); direction: rtl; display: block; text-shadow: 0 2px 18px var(--glow); }
+        .journey-dhikr .nm { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-top: 2px; }
+
+        .life-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 11px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 8px; }
+        .life-row.active { border-color: var(--gold); background: linear-gradient(135deg, rgba(233,196,106,0.14), rgba(201,155,63,0.06)); }
+        .life-row .l { display: flex; align-items: center; gap: 10px; min-width: 0; }
+        .life-row .l .ar { font-family: 'Amiri', serif; font-size: 17px; color: var(--gold-soft); flex-shrink: 0; }
+        .life-row .l .nm { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .life-row .v { font-weight: 700; color: var(--gold-soft); flex-shrink: 0; }
+        .life-row .v small { font-weight: 500; color: var(--text-dim); font-size: 11px; }
+
         .setting-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; }
         .setting-row h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
         .setting-row p { font-size: 12px; color: var(--text-dim); }
@@ -343,14 +355,17 @@
         <div class="modal">
             <div class="modal-header"><h2>Your Journey</h2><button class="modal-close" id="closeStats" aria-label="Close">×</button></div>
             <div class="modal-body">
+                <div class="journey-dhikr" id="journeyDhikr"></div>
                 <div class="stats-grid">
                     <div class="stat-card"><div class="val" id="statToday">0</div><div class="lbl">Today</div></div>
                     <div class="stat-card"><div class="val" id="statStreak">0</div><div class="lbl">Day Streak</div></div>
                     <div class="stat-card"><div class="val" id="statWeek">0</div><div class="lbl">This Week</div></div>
-                    <div class="stat-card"><div class="val" id="statTotal">0</div><div class="lbl">All Time</div></div>
+                    <div class="stat-card"><div class="val" id="statTotal">0</div><div class="lbl">Lifetime</div></div>
                 </div>
                 <div class="section-title">Last 7 Days</div>
                 <div class="chart" id="chart"></div>
+                <div class="section-title" style="margin-top:22px;">Lifetime by Dhikr</div>
+                <div id="lifetimeList"></div>
             </div>
         </div>
     </div>
@@ -801,40 +816,74 @@
             if (el) el.innerHTML = '“' + escapeHtml(v.t) + '”<span class="ref">— ' + escapeHtml(v.r) + '</span>';
         }
 
-        // ---- Stats ----
+        // ---- Stats (per dhikr) ----
+        // Count for one dhikr on a given day key — today comes from live counts,
+        // past days from the per-dhikr history that is already stored.
+        function countOn(id, key) {
+            if (key === state.today) return state.counts[id] || 0;
+            const h = state.history && state.history[key];
+            return (h && h[id]) || 0;
+        }
+        function lifetimeFor(id) {
+            let total = state.counts[id] || 0;
+            for (const day in (state.history || {})) {
+                if (day === state.today) continue;
+                total += (state.history[day][id] || 0);
+            }
+            return total;
+        }
+        function streakFor(id) {
+            const active = function (d) { return countOn(id, d.toDateString()) > 0; };
+            const d = new Date();
+            if (!active(d)) d.setDate(d.getDate() - 1); // today not done yet — count from yesterday
+            let s = 0;
+            while (active(d)) { s++; d.setDate(d.getDate() - 1); }
+            return s;
+        }
+
         function updateStats() {
-            const todayTotal = Object.values(state.counts).reduce(function (a, b) { return a + b; }, 0);
-            const liveStreak = state.streak + (todayTotal > 0 ? 1 : 0);
-            $('statToday').textContent = todayTotal;
-            $('statStreak').textContent = liveStreak;
+            const id = state.currentTasbih;
+            const t = currentTasbihObj();
 
-            const weekKeys = Object.keys(state.history || {}).sort().slice(-6);
-            const weekTotal = weekKeys.reduce(function (s, d) {
-                return s + Object.values(state.history[d] || {}).reduce(function (a, b) { return a + b; }, 0);
-            }, 0) + todayTotal;
-            $('statWeek').textContent = weekTotal;
+            const jd = $('journeyDhikr');
+            if (jd && t) jd.innerHTML = (t.arabic ? '<span class="ar">' + escapeHtml(t.arabic) + '</span>' : '') +
+                '<span class="nm">' + escapeHtml(t.name) + '</span>';
 
-            const allTime = Object.values(state.history || {}).reduce(function (s, day) {
-                return s + Object.values(day || {}).reduce(function (a, b) { return a + b; }, 0);
-            }, 0) + todayTotal;
-            $('statTotal').textContent = allTime;
+            $('statToday').textContent = state.counts[id] || 0;
+            $('statStreak').textContent = streakFor(id);
+            $('statTotal').textContent = lifetimeFor(id);
 
             const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
             const now = new Date();
-            let max = 1;
+            let week = 0, max = 1;
             const data = [];
             for (let i = 6; i >= 0; i--) {
                 const d = new Date(now); d.setDate(d.getDate() - i);
                 const key = d.toDateString();
-                const dayData = key === state.today ? state.counts : ((state.history && state.history[key]) || {});
-                const c = Object.values(dayData).reduce(function (a, b) { return a + b; }, 0);
+                const c = countOn(id, key);
+                week += c;
                 data.push({ day: days[d.getDay()], count: c, today: key === state.today });
                 if (c > max) max = c;
             }
+            $('statWeek').textContent = week;
             $('chart').innerHTML = data.map(function (d) {
                 return '<div class="chart-bar' + (d.today ? ' today' : '') + '">' +
                     '<div class="bar" style="height:' + ((d.count / max) * 68 + 6) + 'px"></div>' +
                     '<span class="day">' + d.day + '</span></div>';
+            }).join('');
+
+            // Lifetime by dhikr — a glance across all of them
+            const rows = state.tasbihList.map(function (x) {
+                return { x: x, total: lifetimeFor(x.id) };
+            }).sort(function (a, b) { return b.total - a.total; });
+            $('lifetimeList').innerHTML = rows.map(function (r) {
+                return '<div class="life-row' + (r.x.id === id ? ' active' : '') + '">' +
+                    '<div class="l">' +
+                        (r.x.arabic ? '<span class="ar">' + escapeHtml(r.x.arabic.split(' ')[0]) + '</span>' : '') +
+                        '<span class="nm">' + escapeHtml(r.x.name) + '</span>' +
+                    '</div>' +
+                    '<div class="v">' + r.total + ' <small>today ' + (state.counts[r.x.id] || 0) + '</small></div>' +
+                '</div>';
             }).join('');
         }
 

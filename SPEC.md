@@ -39,7 +39,7 @@ The app should *feel like dhikr*: unhurried, warm, and reverent. Interaction is 
 3. **Actions** — "− undo one", "↺ reset" chips, and an inline daily-goal editor (✏️).
 4. **Reminder** — a rotating verse/hadith on remembrance.
 5. **Tasbih selector** — horizontal scrollable pills; **+** to add.
-6. **Stats modal** — Today, Day Streak, This Week, All Time, plus a 7-day bar chart (today highlighted emerald).
+6. **Journey modal (per dhikr)** — reflects the currently selected dhikr: Today, Day Streak, This Week, and Lifetime, plus its own 7-day bar chart (today highlighted emerald) and a "Lifetime by Dhikr" list ranking every dhikr. All figures are derived from the per-dhikr daily `history` already in storage — no extra data is kept.
 7. **Settings modal** — Sound, Vibration, per-dhikr Daily Goal, custom-dhikr management, and data reset.
 
 ## Interactions
@@ -69,6 +69,6 @@ The app should *feel like dhikr*: unhurried, warm, and reverent. Interaction is 
 2. ✅ Bead ring and goal arc reflect count and round accurately.
 3. ✅ Switch between multiple dhikr; add/edit/delete custom dhikr.
 4. ✅ Data persists across reloads and rolls over at midnight.
-5. ✅ Streak and statistics (today / week / all-time / chart) are correct.
+5. ✅ Per-dhikr statistics (today / streak / week / lifetime / chart) are correct and independent for each dhikr.
 6. ✅ Installable and works fully offline.
 7. ✅ Calm, responsive, accessible on phones and desktops (320px and up).
