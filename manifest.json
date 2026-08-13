@@ -1,0 +1,21 @@
+{
+  "name": "Tasbih Pro — Digital Dhikr Counter",
+  "short_name": "Tasbih Pro",
+  "description": "A serene digital tasbih for the remembrance of Allah. Count your dhikr with Arabic, meanings, prayer-bead rings, goals and stats — fully offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0f1c",
+  "theme_color": "#0a0f1c",
+  "categories": ["lifestyle", "utilities"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

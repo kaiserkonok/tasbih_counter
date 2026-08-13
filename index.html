@@ -2,83 +2,127 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="A beautiful dhikr counter web app for Muslims. Track your SubhanAllah, Alhamdulillah, and more.">
-    <meta name="keywords" content="tasbih, dhikr, counter, islam, zikir, muslim, prayer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="A serene dhikr counter for Muslims. Count SubhanAllah, Alhamdulillah, Allahu Akbar and more on a beautiful digital tasbih — with Arabic, meanings, prayer-bead rings, goals and stats. Works offline.">
+    <meta name="keywords" content="tasbih, misbaha, dhikr, zikr, counter, islam, subhanallah, alhamdulillah, allahu akbar, prayer beads, muslim">
     <meta name="author" content="Tasbih Pro">
-    <meta name="theme-color" content="#0D1117">
-    <meta property="og:title" content="Tasbih Pro">
-    <meta property="og:description" content="A beautiful dhikr counter for Muslims">
+    <meta name="theme-color" content="#0a0f1c">
+    <meta property="og:title" content="Tasbih Pro — Digital Dhikr Counter">
+    <meta property="og:description" content="A serene place for dhikr. Count your remembrance of Allah on a beautiful digital tasbih.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kaiserkonok.github.io/tasbih_counter/">
-    <title>Tasbih Pro</title>
+    <title>Tasbih Pro — Digital Dhikr Counter</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@500;600&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
         :root {
-            --bg: #0D1117;
-            --surface: #161B22;
-            --surface-light: #21262D;
-            --primary: #58A6FF;
-            --success: #238636;
-            --text: #F0F6FC;
-            --text-dim: #8B949E;
+            --bg: #0a0f1c;
+            --bg-2: #0c1424;
+            --surface: rgba(233, 196, 106, 0.04);
+            --surface-2: rgba(255, 255, 255, 0.05);
+            --line: rgba(233, 196, 106, 0.14);
+            --gold: #e9c46a;
+            --gold-soft: #f3d9a0;
+            --gold-deep: #c99b3f;
+            --emerald: #3ddc97;
+            --emerald-deep: #2a9d8f;
+            --text: #f6f1e4;
+            --text-dim: #9aa6b8;
+            --danger: #f2766a;
+            --glow: rgba(233, 196, 106, 0.35);
+            --radius: 18px;
         }
 
+        html, body { height: 100%; }
+
         body {
-            font-family: 'Quicksand', sans-serif;
-            background: var(--bg);
+            font-family: 'Quicksand', system-ui, sans-serif;
             color: var(--text);
+            background: var(--bg);
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Night-sky ambience */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background:
+                radial-gradient(120% 80% at 50% -10%, rgba(233,196,106,0.10), transparent 55%),
+                radial-gradient(100% 70% at 50% 110%, rgba(42,157,143,0.12), transparent 55%),
+                linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+        }
+        /* Faint starfield */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image:
+                radial-gradient(1px 1px at 20% 30%, rgba(246,241,228,0.55), transparent),
+                radial-gradient(1px 1px at 70% 20%, rgba(246,241,228,0.4), transparent),
+                radial-gradient(1px 1px at 40% 70%, rgba(246,241,228,0.35), transparent),
+                radial-gradient(1.5px 1.5px at 85% 60%, rgba(246,241,228,0.4), transparent),
+                radial-gradient(1px 1px at 15% 85%, rgba(246,241,228,0.3), transparent),
+                radial-gradient(1px 1px at 60% 90%, rgba(246,241,228,0.3), transparent);
+            opacity: 0.5;
+            pointer-events: none;
         }
 
         .app {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 16px;
+            padding: max(16px, env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+            max-width: 620px;
+            margin: 0 auto;
         }
-
-        @media (min-width: 768px) {
-            .app { max-width: 600px; margin: 0 auto; padding: 32px; }
-        }
+        @media (min-width: 768px) { .app { padding: 32px; } }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 6px 2px 2px;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), #F0883E);
-            -webkit-background-clip: text;
+        .brand { display: flex; align-items: center; gap: 11px; }
+        .brand .mark { filter: drop-shadow(0 2px 10px var(--glow)); flex-shrink: 0; }
+        .brand .title { display: flex; flex-direction: column; line-height: 1.1; }
+        .brand .title b {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 23px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            background: linear-gradient(135deg, var(--gold-soft), var(--gold-deep));
+            -webkit-background-clip: text; background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .brand .title span { font-size: 10.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-dim); }
 
         .header-btns { display: flex; gap: 8px; }
-        
         .icon-btn {
-            width: 36px; height: 36px;
-            border-radius: 10px;
+            width: 42px; height: 42px;
+            border-radius: 12px;
             background: var(--surface);
-            border: 1px solid var(--surface-light);
-            color: var(--text-dim);
+            border: 1px solid var(--line);
+            color: var(--gold-soft);
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform .15s, background .2s, border-color .2s;
         }
+        .icon-btn:hover { background: var(--surface-2); border-color: var(--gold); }
+        .icon-btn:active { transform: scale(0.92); }
+        .icon-btn svg { width: 20px; height: 20px; }
 
         main {
             flex: 1;
@@ -86,500 +130,288 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 24px;
-            padding: 20px 0;
+            gap: 18px;
+            padding: 14px 0;
         }
 
-        .current-tasbih-name {
-            font-size: 18px;
-            color: var(--text-dim);
-            font-weight: 600;
+        /* Dhikr heading */
+        .dhikr-head { text-align: center; min-height: 92px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; }
+        .dhikr-arabic {
+            font-family: 'Amiri', serif;
+            font-size: clamp(30px, 9vw, 44px);
+            line-height: 1.5;
+            color: var(--gold-soft);
+            text-shadow: 0 2px 24px var(--glow);
+            direction: rtl;
         }
+        .dhikr-translit { font-size: clamp(14px, 4vw, 17px); font-weight: 600; letter-spacing: 0.4px; color: var(--text); }
+        .dhikr-meaning { font-family: 'Cormorant Garamond', serif; font-size: clamp(14px, 4vw, 17px); font-style: italic; color: var(--text-dim); }
+
+        /* Counter */
+        .counter-wrap { position: relative; width: min(330px, 84vw); aspect-ratio: 1; display: grid; place-items: center; }
+        .counter-svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+        .goal-track { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 3; }
+        .goal-arc { fill: none; stroke: url(#goalGrad); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset .5s cubic-bezier(.22,1,.36,1); }
+        .bead { fill: rgba(255,255,255,0.10); transition: fill .25s, r .25s; }
+        .bead.lit { fill: var(--gold); filter: drop-shadow(0 0 4px var(--glow)); }
+        .bead.head { fill: rgba(61,220,151,0.35); }
+        .bead.head.lit { fill: var(--emerald); filter: drop-shadow(0 0 6px rgba(61,220,151,0.6)); }
 
         .counter-btn {
-            width: min(180px, 45vmin); height: min(180px, 45vmin);
+            position: relative;
+            width: 63%; aspect-ratio: 1;
             border-radius: 50%;
-            background: var(--surface);
-            border: 3px solid var(--surface-light);
+            border: 1px solid var(--line);
+            background:
+                radial-gradient(120% 120% at 50% 20%, rgba(233,196,106,0.10), transparent 60%),
+                linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(233,196,106,0.06);
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            transition: transform 0.1s;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-            position: relative;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+            color: var(--text);
+            overflow: hidden;
+            animation: breathe 5.5s ease-in-out infinite;
+            transition: transform .12s ease;
+            user-select: none;
         }
+        .counter-btn:active { transform: scale(0.965); }
+        .counter-btn.bump { animation: bump .28s cubic-bezier(.22,1.4,.4,1); }
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 20px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(233,196,106,0.06); }
+            50% { box-shadow: 0 20px 70px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.10), 0 0 34px 2px var(--glow); }
+        }
+        @keyframes bump { 0%{transform:scale(1);} 45%{transform:scale(1.07);} 100%{transform:scale(1);} }
 
-        @media (min-width: 768px) {
-            .counter-btn { width: min(220px, 40vmin); height: min(220px, 40vmin); }
-        }
+        .counter-btn .count { font-size: clamp(46px, 15vw, 68px); font-weight: 700; line-height: 1; letter-spacing: -1px; color: var(--gold-soft); text-shadow: 0 2px 20px var(--glow); }
+        .counter-btn .round-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-top: 6px; }
+        .counter-btn .tap-hint { font-size: 10px; letter-spacing: 1px; color: var(--text-dim); opacity: .6; margin-top: 2px; }
 
-        .counter-btn:active { transform: scale(0.95); }
-        .counter-btn.bump { animation: bump 0.15s; }
+        .ripple { position: absolute; border-radius: 50%; border: 2px solid var(--gold); pointer-events: none; animation: ripple .6s ease-out forwards; }
+        @keyframes ripple { from { opacity: .5; transform: scale(0.2);} to { opacity: 0; transform: scale(2.4);} }
 
-        @keyframes bump {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
+        /* Action row */
+        .actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 13px; font-weight: 500; color: var(--text-dim);
+            padding: 9px 16px; border-radius: 22px;
+            background: var(--surface); border: 1px solid var(--line);
+            cursor: pointer; transition: all .18s; font-family: inherit;
         }
+        .chip:hover { color: var(--text); border-color: var(--gold); }
+        .chip:active { transform: scale(0.94); }
 
-        .counter-btn .arabic {
-            font-family: 'Amiri', serif;
-            font-size: 28px;
-        }
+        .goal-line { font-size: 13px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+        .goal-line b { color: var(--gold-soft); font-weight: 700; }
+        .goal-line .edit { cursor: pointer; opacity: .7; background: none; border: none; font-size: 13px; }
+        .goal-line .edit:hover { opacity: 1; }
 
-        @media (min-width: 768px) {
-            .counter-btn .arabic { font-size: 36px; }
-        }
+        .verse { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(13px, 3.5vw, 15px); color: var(--text-dim); text-align: center; max-width: 340px; line-height: 1.5; }
+        .verse .ref { display: block; font-style: normal; font-size: 11px; letter-spacing: 1px; color: var(--gold-deep); margin-top: 4px; }
 
-        .counter-btn .count {
-            font-size: clamp(36px, 10vmin, 56px);
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .decrease-btn {
-            font-size: 14px;
-            color: var(--text-dim);
-            padding: 8px 16px;
-            background: var(--surface);
-            border-radius: 20px;
-            border: 1px solid var(--surface-light);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .decrease-btn:active {
-            background: var(--surface-light);
-            transform: scale(0.95);
-        }
-
-        .reset-btn {
-            font-size: 14px;
-            color: var(--text-dim);
-            padding: 8px 16px;
-            background: var(--surface);
-            border-radius: 20px;
-            border: 1px solid var(--surface-light);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .reset-btn:active {
-            background: var(--surface-light);
-            transform: scale(0.95);
-        }
-
-        .hint { font-size: clamp(11px, 2.5vw, 13px); color: var(--text-dim); opacity: 0.7; text-align: center; }
-        .hint kbd { 
-            background: var(--surface); 
-            padding: 2px 6px; 
-            border-radius: 4px; 
-            border: 1px solid var(--surface-light);
-            font-family: inherit;
-        }
-
-        .goal-card {
-            width: 100%;
-            background: var(--surface);
-            border-radius: 14px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            border: 1px solid var(--surface-light);
-        }
-
-        .goal-ring {
-            width: 64px; height: 64px;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .goal-ring svg { transform: rotate(-90deg); }
-        .goal-ring circle {
-            fill: none; stroke-width: 6; stroke-linecap: round;
-        }
-        .goal-ring .bg { stroke: var(--surface-light); }
-        .goal-ring .progress {
-            stroke: var(--success);
-            stroke-dasharray: 176;
-            stroke-dashoffset: 176;
-            transition: stroke-dashoffset 0.3s;
-        }
-
-        .goal-text {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .goal-text .percent { font-size: 14px; font-weight: 700; }
-        .goal-text .label { font-size: 8px; color: var(--text-dim); text-transform: uppercase; }
-
-        .goal-info h3 { font-size: 16px; margin-bottom: 2px; }
-        .goal-info p { font-size: 13px; color: var(--text-dim); }
-
-        .tasbih-list {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            width: 100%;
-            padding: 4px 0;
-            scrollbar-width: none;
-        }
+        /* Tasbih selector */
+        .tasbih-list { display: flex; gap: 8px; overflow-x: auto; width: 100%; padding: 4px 2px; scrollbar-width: none; scroll-snap-type: x proximity; }
         .tasbih-list::-webkit-scrollbar { display: none; }
-
         .tasbih-pill {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: var(--surface);
-            border: 1px solid var(--surface-light);
-            color: var(--text-dim);
-            font-size: 13px;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.2s;
+            scroll-snap-align: center; white-space: nowrap; flex-shrink: 0;
+            padding: 9px 15px; border-radius: 22px;
+            background: var(--surface); border: 1px solid var(--line); color: var(--text-dim);
+            font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; font-family: inherit;
+            display: inline-flex; align-items: center; gap: 7px;
         }
-        .tasbih-pill.active {
-            background: var(--primary);
-            color: var(--bg);
-            border-color: var(--primary);
-        }
-        .tasbih-pill .pill-arabic { font-family: 'Amiri', serif; margin-right: 6px; }
-
-        .add-pill {
-            background: transparent;
-            border: 2px dashed var(--surface-light);
-            color: var(--text-dim);
-        }
-        .add-pill:hover { border-color: var(--primary); color: var(--primary); }
+        .tasbih-pill .p-ar { font-family: 'Amiri', serif; font-size: 15px; color: var(--gold-soft); }
+        .tasbih-pill.active { background: linear-gradient(135deg, rgba(233,196,106,0.22), rgba(201,155,63,0.12)); border-color: var(--gold); color: var(--text); }
+        .tasbih-pill.active .p-ar { color: var(--gold); }
+        .add-pill { border-style: dashed; color: var(--gold-deep); font-size: 16px; padding: 9px 16px; }
+        .add-pill:hover { border-color: var(--gold); color: var(--gold); }
 
         /* Modal */
         .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.85);
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            opacity: 0; visibility: hidden;
-            transition: all 0.3s;
-            z-index: 100;
+            position: fixed; inset: 0; z-index: 100;
+            background: rgba(4,7,14,0.72); backdrop-filter: blur(6px);
+            display: flex; align-items: flex-end; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s;
         }
         .modal-overlay.open { opacity: 1; visibility: visible; }
+        @media (min-width: 640px) { .modal-overlay { align-items: center; } }
 
         .modal {
-            background: var(--surface);
-            width: 100%; max-width: 500px;
-            border-radius: 20px 20px 0 0;
-            transform: translateY(100%);
-            transition: transform 0.3s;
+            background: linear-gradient(180deg, #101a2e, #0b1220);
+            width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto;
+            border-radius: 22px 22px 0 0;
+            border: 1px solid var(--line); border-bottom: none;
+            transform: translateY(100%); transition: transform .34s cubic-bezier(.22,1,.36,1);
         }
+        @media (min-width: 640px) { .modal { border-radius: 22px; border-bottom: 1px solid var(--line); } }
         .modal-overlay.open .modal { transform: translateY(0); }
 
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--surface-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-header h2 { font-size: 18px; }
-        .modal-close {
-            width: 28px; height: 28px;
-            border-radius: 8px;
-            background: var(--surface-light);
-            border: none;
-            color: var(--text-dim);
-            cursor: pointer;
-        }
-
+        .modal-header { padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: linear-gradient(180deg, #101a2e, rgba(16,26,46,0.92)); border-bottom: 1px solid var(--line); z-index: 2; }
+        .modal-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--gold-soft); }
+        .modal-close { width: 32px; height: 32px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); color: var(--text-dim); cursor: pointer; font-size: 18px; line-height: 1; }
+        .modal-close:active { transform: scale(0.9); }
         .modal-body { padding: 20px; }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: var(--bg);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-        }
-        .stat-card .val { font-size: 28px; font-weight: 700; color: var(--primary); }
-        .stat-card .lbl { font-size: 11px; color: var(--text-dim); text-transform: uppercase; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 22px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; text-align: center; }
+        .stat-card .val { font-size: 30px; font-weight: 700; color: var(--gold-soft); }
+        .stat-card .lbl { font-size: 10.5px; letter-spacing: 1.5px; color: var(--text-dim); text-transform: uppercase; margin-top: 2px; }
 
-        .chart { display: flex; justify-content: space-between; align-items: flex-end; height: 80px; gap: 4px; }
-        .chart-bar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .chart-bar .bar {
-            width: 100%; max-width: 32px;
-            background: var(--surface-light);
-            border-radius: 4px;
-            min-height: 8px;
-        }
-        .chart-bar .bar::after {
-            content: ''; display: block;
-            background: var(--primary);
-            border-radius: 4px;
-            width: 100%;
-            height: 100%;
-        }
+        .section-title { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin: 4px 0 12px; }
+        .chart { display: flex; justify-content: space-between; align-items: flex-end; height: 92px; gap: 5px; }
+        .chart-bar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .chart-bar .bar { width: 100%; max-width: 30px; background: linear-gradient(180deg, var(--gold), var(--gold-deep)); border-radius: 5px; min-height: 6px; transition: height .4s; box-shadow: 0 0 10px var(--glow); }
+        .chart-bar.today .bar { background: linear-gradient(180deg, var(--emerald), var(--emerald-deep)); box-shadow: 0 0 10px rgba(61,220,151,0.4); }
         .chart-bar .day { font-size: 10px; color: var(--text-dim); }
 
-        .setting-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px;
-            background: var(--bg);
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-        .setting-row h4 { font-size: 14px; margin-bottom: 2px; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; }
+        .setting-row h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
         .setting-row p { font-size: 12px; color: var(--text-dim); }
 
-        .toggle {
-            width: 44px; height: 24px;
-            background: var(--surface-light);
-            border-radius: 12px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .toggle.on { background: var(--primary); }
-        .toggle::after {
-            content: '';
-            position: absolute;
-            width: 18px; height: 18px;
-            background: white;
-            border-radius: 50%;
-            top: 3px; left: 3px;
-            transition: transform 0.2s;
-        }
+        .toggle { flex-shrink: 0; width: 46px; height: 26px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; position: relative; cursor: pointer; transition: background .2s, border-color .2s; }
+        .toggle.on { background: linear-gradient(135deg, var(--gold), var(--gold-deep)); border-color: var(--gold); }
+        .toggle::after { content: ''; position: absolute; width: 18px; height: 18px; background: #fff; border-radius: 50%; top: 3px; left: 3px; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
         .toggle.on::after { transform: translateX(20px); }
 
-        .goal-input {
-            width: 60px;
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--surface-light);
-            background: var(--bg);
-            color: var(--text);
-            font-size: 14px;
-            text-align: center;
-        }
+        .goal-input { width: 68px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-size: 14px; text-align: center; font-family: inherit; }
 
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .btn-primary { background: var(--primary); color: var(--bg); }
-        .btn-danger { background: rgba(248,81,73,0.2); color: #F85149; }
+        .btn { width: 100%; padding: 13px; border-radius: 12px; border: 1px solid transparent; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 10px; transition: transform .12s, filter .2s; }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-deep)); color: #1a1204; }
+        .btn-ghost { background: var(--surface-2); color: var(--text); border-color: var(--line); }
+        .btn-danger { background: rgba(242,118,106,0.14); color: var(--danger); border-color: rgba(242,118,106,0.3); }
 
-        .tasbih-form {
-            background: var(--bg);
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-        }
-        .tasbih-form input {
-            width: 100%;
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1px solid var(--surface-light);
-            background: var(--surface);
-            color: var(--text);
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .tasbih-form input.arabic {
-            font-family: 'Amiri', serif;
-            direction: rtl;
-            text-align: right;
-        }
-        .tasbih-form-btns { display: flex; gap: 8px; }
-        .tasbih-form-btns .btn { margin: 0; }
+        .tasbih-form { background: var(--surface); border: 1px solid var(--line); padding: 16px; border-radius: 14px; margin-bottom: 16px; }
+        .tasbih-form input { width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-size: 14px; font-family: inherit; margin-bottom: 10px; }
+        .tasbih-form input.ar { font-family: 'Amiri', serif; direction: rtl; text-align: right; font-size: 18px; }
+        .tasbih-form .row2 { display: flex; gap: 8px; }
+        .tasbih-form .row2 .btn { margin: 0; }
 
-        .custom-list { margin-top: 12px; }
-        .custom-item {
-            display: flex; gap: 8px;
-            margin-bottom: 8px;
-        }
-        .custom-item input {
-            flex: 1;
-            padding: 8px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--surface-light);
-            background: var(--surface);
-            color: var(--text);
-            font-size: 13px;
-        }
-        .custom-item .del-btn {
-            width: 32px; height: 32px;
-            border-radius: 6px;
-            background: rgba(248,81,73,0.2);
-            border: none;
-            color: #F85149;
-            cursor: pointer;
-            font-size: 18px;
-        }
+        .custom-item { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+        .custom-item input { flex: 1; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-size: 13px; font-family: inherit; min-width: 0; }
+        .custom-item input.ar { flex: 0 0 92px; font-family: 'Amiri', serif; direction: rtl; text-align: right; }
+        .custom-item .del-btn { flex-shrink: 0; width: 36px; height: 36px; border-radius: 10px; background: rgba(242,118,106,0.14); border: 1px solid rgba(242,118,106,0.3); color: var(--danger); cursor: pointer; font-size: 18px; }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-        }
-        .empty-state h3 { font-size: 18px; margin-bottom: 8px; }
-        .empty-state p { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; }
+        .empty-state { text-align: center; padding: 30px 20px; }
+        .empty-state .em { font-size: 44px; margin-bottom: 10px; }
+        .empty-state h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--gold-soft); margin-bottom: 8px; }
+        .empty-state p { font-size: 14px; color: var(--text-dim); margin-bottom: 18px; }
 
-        .toast {
-            position: fixed;
-            bottom: 80px; left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--surface);
-            padding: 12px 20px;
-            border-radius: 10px;
-            border: 1px solid var(--surface-light);
-            opacity: 0;
-            transition: all 0.3s;
-            z-index: 150;
-        }
+        .toast { position: fixed; left: 50%; bottom: calc(28px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(16px); background: linear-gradient(135deg, #16233c, #0e1626); color: var(--text); padding: 12px 20px; border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 12px 30px rgba(0,0,0,0.5); opacity: 0; transition: opacity .3s, transform .3s; z-index: 150; font-size: 14px; pointer-events: none; text-align: center; max-width: 90vw; }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        .confetti {
-            position: fixed;
-            width: 8px; height: 8px;
-            border-radius: 2px;
-            animation: fall 2s linear forwards;
-            z-index: 200;
-        }
-        @keyframes fall {
-            to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
+        .confetti { position: fixed; width: 9px; height: 9px; border-radius: 2px; z-index: 200; animation: fall 2.4s linear forwards; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(720deg); opacity: 0; } }
 
-        /* Small screens */
-        @media (max-width: 480px) {
-            .app { padding: 12px; }
-            main { gap: 16px; padding: 12px 0; }
-            .logo { font-size: 17px; gap: 8px; }
-            .icon-btn { width: 32px; height: 32px; }
-            .goal-card { padding: 12px; gap: 12px; }
-            .goal-info h3 { font-size: 14px; }
-            .goal-info p { font-size: 12px; }
-            .tasbih-pill { padding: 6px 12px; font-size: 12px; }
-            .modal-body { padding: 16px; }
-            .modal-header { padding: 16px; }
-            .stat-card { padding: 12px; }
-            .stat-card .val { font-size: 22px; }
-        }
+        @media (max-width: 360px) { main { gap: 12px; } .dhikr-head { min-height: 78px; } }
 
-        /* Very small screens (320px) */
-        @media (max-width: 360px) {
-            .app { padding: 8px; }
-            main { gap: 12px; }
-            .goal-card { flex-direction: column; text-align: center; }
-            .setting-row { flex-direction: column; gap: 8px; text-align: center; }
+        @media (prefers-reduced-motion: reduce) {
+            .counter-btn { animation: none; }
+            *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .05ms !important; }
         }
     </style>
 </head>
 <body>
     <div class="app">
         <header>
-            <div class="logo">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                    <circle cx="16" cy="16" r="14" stroke="url(#grad)" stroke-width="2"/>
-                    <path d="M16 8v8l5.5 3" stroke="#58A6FF" stroke-width="2" stroke-linecap="round"/>
-                    <circle cx="16" cy="16" r="3" fill="#F0883E"/>
-                    <defs>
-                        <linearGradient id="grad" x1="0" y1="0" x2="32" y2="32">
-                            <stop stop-color="#58A6FF"/>
-                            <stop offset="1" stop-color="#F0883E"/>
-                        </linearGradient>
-                    </defs>
+            <div class="brand">
+                <svg class="mark" width="34" height="34" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                    <circle cx="16" cy="16" r="13" stroke="url(#g)" stroke-width="2"/>
+                    <circle cx="16" cy="3.4" r="2.4" fill="#3ddc97"/>
+                    <circle cx="16" cy="28.6" r="2" fill="#e9c46a"/>
+                    <circle cx="3.4" cy="16" r="2" fill="#e9c46a"/>
+                    <circle cx="28.6" cy="16" r="2" fill="#e9c46a"/>
+                    <circle cx="16" cy="16" r="3" fill="#c99b3f"/>
+                    <defs><linearGradient id="g" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#f3d9a0"/><stop offset="1" stop-color="#2a9d8f"/></linearGradient></defs>
                 </svg>
-                <span>Tasbih Pro</span>
+                <div class="title"><b>Tasbih Pro</b><span>Remembrance</span></div>
             </div>
             <div class="header-btns">
-                <button class="icon-btn" id="statsBtn">📊</button>
-                <button class="icon-btn" id="settingsBtn">⚙️</button>
+                <button class="icon-btn" id="statsBtn" aria-label="Statistics">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M12 20V4M20 20v-6"/></svg>
+                </button>
+                <button class="icon-btn" id="settingsBtn" aria-label="Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </button>
             </div>
         </header>
 
-        <main id="mainArea">
-            <!-- Content injected by JS -->
-        </main>
+        <main id="mainArea"><!-- injected --></main>
     </div>
 
+    <!-- Stats Modal -->
     <div class="modal-overlay" id="statsModal">
         <div class="modal">
-            <div class="modal-header">
-                <h2>Statistics</h2>
-                <button class="modal-close" id="closeStats">×</button>
-            </div>
+            <div class="modal-header"><h2>Your Journey</h2><button class="modal-close" id="closeStats" aria-label="Close">×</button></div>
             <div class="modal-body">
                 <div class="stats-grid">
                     <div class="stat-card"><div class="val" id="statToday">0</div><div class="lbl">Today</div></div>
-                    <div class="stat-card"><div class="val" id="statStreak">0</div><div class="lbl">Streak</div></div>
-                    <div class="stat-card"><div class="val" id="statWeek">0</div><div class="lbl">Week</div></div>
-                    <div class="stat-card"><div class="val" id="statTotal">0</div><div class="lbl">Total</div></div>
+                    <div class="stat-card"><div class="val" id="statStreak">0</div><div class="lbl">Day Streak</div></div>
+                    <div class="stat-card"><div class="val" id="statWeek">0</div><div class="lbl">This Week</div></div>
+                    <div class="stat-card"><div class="val" id="statTotal">0</div><div class="lbl">All Time</div></div>
                 </div>
-                <h3 style="font-size:14px;color:var(--text-dim);margin-bottom:12px;">Last 7 Days</h3>
+                <div class="section-title">Last 7 Days</div>
                 <div class="chart" id="chart"></div>
             </div>
         </div>
     </div>
 
+    <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal">
-            <div class="modal-header">
-                <h2>Settings</h2>
-                <button class="modal-close" id="closeSettings">×</button>
-            </div>
+            <div class="modal-header"><h2>Settings</h2><button class="modal-close" id="closeSettings" aria-label="Close">×</button></div>
             <div class="modal-body">
                 <div class="setting-row">
-                    <div><h4>Sound</h4><p>Play on tap</p></div>
-                    <div class="toggle" id="soundToggle"></div>
+                    <div><h4>Sound</h4><p>A soft chime on each count</p></div>
+                    <button class="toggle" id="soundToggle" role="switch" aria-label="Sound"></button>
                 </div>
                 <div class="setting-row">
-                    <div><h4>Vibration</h4><p>Haptic feedback</p></div>
-                    <div class="toggle on" id="vibrateToggle"></div>
+                    <div><h4>Vibration</h4><p>Gentle haptic feedback</p></div>
+                    <button class="toggle on" id="vibrateToggle" role="switch" aria-label="Vibration"></button>
                 </div>
                 <div class="setting-row">
-                    <div><h4>Daily Goal</h4><p>Dhikr target</p></div>
-                    <input type="number" class="goal-input" id="goalInput" value="100" min="1">
+                    <div><h4>Daily Goal</h4><p>Target for this dhikr</p></div>
+                    <input type="number" class="goal-input" id="goalInput" value="100" min="1" inputmode="numeric" aria-label="Daily goal">
                 </div>
 
-                <h3 style="font-size:14px;color:var(--text-dim);margin:20px 0 12px;">Custom Tasbih</h3>
+                <div class="section-title" style="margin-top:22px;">Your Tasbihs</div>
                 <div id="tasbihFormContainer"></div>
-                <div id="customList"></div>
+                <button class="btn btn-ghost" id="showAddBtn" style="margin-top:0;">+ Add a dhikr</button>
+                <div id="customList" style="margin-top:14px;"></div>
 
-                <button class="btn btn-primary" id="resetToday">Reset Today's Count</button>
+                <div class="section-title" style="margin-top:22px;">Data</div>
+                <button class="btn btn-ghost" id="resetToday">Reset Today's Counts</button>
                 <button class="btn btn-danger" id="resetAll">Reset All Data</button>
             </div>
         </div>
     </div>
 
-    <div class="toast" id="toast"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
-        // Default tasbihs
-        const DEFAULT_TASBIH = [
-            { id: 'subhanallah', name: 'SubhanAllah' },
-            { id: 'alhamdulillah', name: 'Alhamdulillah' },
-            { id: 'allahuakbar', name: 'Allahu Akbar' },
-            { id: 'lailahaillallah', name: 'La ilaha illallah' },
-            { id: 'astaghfirullah', name: 'Astaghfirullah' }
-        ];
+    (function () {
+        'use strict';
 
-        // Migration map for old misspelled IDs → correct IDs
+        // ---- Dhikr library (Arabic, transliteration, meaning, traditional round) ----
+        const DEFAULT_TASBIH = [
+            { id: 'subhanallah',     name: 'SubhanAllah',       arabic: 'سُبْحَانَ ٱللَّٰه',        meaning: 'Glory be to Allah',             round: 33 },
+            { id: 'alhamdulillah',   name: 'Alhamdulillah',     arabic: 'ٱلْحَمْدُ لِلَّٰه',         meaning: 'All praise is due to Allah',    round: 33 },
+            { id: 'allahuakbar',     name: 'Allahu Akbar',      arabic: 'ٱللَّٰهُ أَكْبَر',          meaning: 'Allah is the Greatest',         round: 34 },
+            { id: 'lailahaillallah', name: 'La ilaha illallah', arabic: 'لَا إِلَٰهَ إِلَّا ٱللَّٰه', meaning: 'There is no god but Allah',      round: 100 },
+            { id: 'astaghfirullah',  name: 'Astaghfirullah',    arabic: 'أَسْتَغْفِرُ ٱللَّٰه',       meaning: 'I seek forgiveness from Allah',  round: 100 }
+        ];
+        const DEFAULTS_BY_ID = {};
+        DEFAULT_TASBIH.forEach(t => { DEFAULTS_BY_ID[t.id] = t; });
         const ID_MIGRATION = { alhmadulillah: 'alhamdulillah', allahakbar: 'allahuakbar' };
 
-        // State
+        const VERSES = [
+            { t: 'Verily, in the remembrance of Allah do hearts find rest.', r: 'Qur’an 13:28' },
+            { t: 'So remember Me; I will remember you.', r: 'Qur’an 2:152' },
+            { t: 'And the remembrance of Allah is greater.', r: 'Qur’an 29:45' },
+            { t: 'O you who believe, remember Allah with much remembrance.', r: 'Qur’an 33:41' },
+            { t: 'The one who remembers his Lord and the one who does not are like the living and the dead.', r: 'Sahih al-Bukhari' }
+        ];
+
+        // ---- State ----
         let state = {
             tasbihList: [],
             currentTasbih: null,
@@ -592,554 +424,588 @@
             sound: false,
             vibrate: true
         };
+        let lastAction = null;   // { id, count } for undo
+        let beadEls = [];        // cached bead nodes for fast paint
 
-        function currentGoal() {
-            return state.goals[state.currentTasbih] || 100;
+        const $ = (id) => document.getElementById(id);
+        const clamp0 = (n) => (n > 0 ? n : 0);
+
+        function currentTasbihObj() {
+            return state.tasbihList.find(t => t.id === state.currentTasbih) || state.tasbihList[0] || null;
+        }
+        function currentGoal() { return state.goals[state.currentTasbih] || 100; }
+        function currentRound() { const t = currentTasbihObj(); return (t && t.round) || 33; }
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
-        // Audio
+        // ---- Audio: soft bell ----
         let audioCtx = null;
-        function playSound() {
-            if (!state.sound) return;
+        function tone(freq, dur, gainPeak) {
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = audioCtx.currentTime;
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.frequency.value = 880;
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
-            } catch(e) {}
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                gain.gain.setValueAtTime(0.0001, now);
+                gain.gain.exponentialRampToValueAtTime(gainPeak, now + 0.012);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+                osc.start(now); osc.stop(now + dur + 0.02);
+            } catch (e) {}
         }
+        function playTap() { if (state.sound) tone(880, 0.18, 0.12); }
+        function playRound() { if (state.sound) { tone(660, 0.5, 0.14); setTimeout(() => tone(990, 0.6, 0.12), 90); } }
 
-        // Save/Load
+        // ---- Persistence ----
         function save() {
-            localStorage.setItem('tasbihPro', JSON.stringify(state));
+            try { localStorage.setItem('tasbihPro', JSON.stringify(state)); } catch (e) {}
         }
-
+        function enrichTasbih(t) {
+            const d = DEFAULTS_BY_ID[t.id];
+            return {
+                id: t.id,
+                name: t.name || (d && d.name) || 'Dhikr',
+                arabic: t.arabic || (d && d.arabic) || '',
+                meaning: t.meaning || (d && d.meaning) || '',
+                round: t.round || (d && d.round) || 33
+            };
+        }
         function load() {
-            const saved = localStorage.getItem('tasbihPro');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    const today = new Date().toDateString();
-                    if (parsed.today !== today) {
-                        if (parsed.counts && Object.keys(parsed.counts).length) {
-                            parsed.history = parsed.history || {};
-                            parsed.history[parsed.today] = parsed.counts;
-                        }
-                        parsed.counts = {};
-                        parsed.today = today;
-                        // calc streak
-                        let streak = 0;
-                        for (const d of Object.keys(parsed.history || {}).sort().reverse()) {
-                            const c = Object.values(parsed.history[d] || {}).reduce((a,b)=>a+b,0);
-                            if (c > 0) streak++; else break;
-                        }
-                        parsed.streak = streak;
-                    }
-                    state = { ...state, ...parsed };
+            let parsed = null;
+            try { parsed = JSON.parse(localStorage.getItem('tasbihPro') || 'null'); } catch (e) { parsed = null; }
 
-                    // Migrate old single goal → per-tasbih goals
-                    if (parsed.goal !== undefined && (!parsed.goals || Object.keys(parsed.goals).length === 0)) {
-                        state.goals = {};
-                        state.tasbihList.forEach(t => {
-                            state.goals[t.id] = parsed.goal;
-                        });
-                    }
-                    if (parsed.goalReached !== undefined && (!parsed.goalsReached || Object.keys(parsed.goalsReached).length === 0)) {
-                        state.goalsReached = {};
-                        if (parsed.goalReached) {
-                            state.tasbihList.forEach(t => {
-                                state.goalsReached[t.id] = true;
-                            });
-                        }
-                    }
-                    delete state.goal;
-                    delete state.goalReached;
+            if (parsed && typeof parsed === 'object') {
+                const today = new Date().toDateString();
 
-                    // Migrate misspelled IDs to correct IDs
-                    for (const [oldId, newId] of Object.entries(ID_MIGRATION)) {
-                        if (state.counts && state.counts[oldId] !== undefined) {
-                            state.counts[newId] = (state.counts[newId] || 0) + state.counts[oldId];
-                            delete state.counts[oldId];
-                        }
-                        if (state.history) {
-                            for (const day of Object.keys(state.history)) {
-                                if (state.history[day][oldId] !== undefined) {
-                                    state.history[day][newId] = (state.history[day][newId] || 0) + state.history[day][oldId];
-                                    delete state.history[day][oldId];
-                                }
-                            }
-                        }
-                        state.tasbihList = state.tasbihList.map(t =>
-                            t.id === oldId ? { ...t, id: newId, name: DEFAULT_TASBIH.find(d => d.id === newId)?.name || t.name } : t
-                        );
-                        if (state.currentTasbih === oldId) state.currentTasbih = newId;
+                // Daily rollover: archive yesterday's counts, recompute streak
+                if (parsed.today && parsed.today !== today) {
+                    if (parsed.counts && Object.keys(parsed.counts).length) {
+                        parsed.history = parsed.history || {};
+                        parsed.history[parsed.today] = parsed.counts;
                     }
+                    parsed.counts = {};
+                    parsed.goalsReached = {};
+                    parsed.today = today;
+                    let streak = 0;
+                    for (const d of Object.keys(parsed.history || {}).sort().reverse()) {
+                        const c = Object.values(parsed.history[d] || {}).reduce((a, b) => a + b, 0);
+                        if (c > 0) streak++; else break;
+                    }
+                    parsed.streak = streak;
+                }
 
-                    // Migrate old tasbihs from counts keys
-                    if (state.tasbihList.length === 0 && state.counts && Object.keys(state.counts).length > 0) {
-                        const existingIds = Object.keys(state.counts);
-                        state.tasbihList = DEFAULT_TASBIH.filter(t => existingIds.includes(t.id));
-                        if (state.tasbihList.length === 0) {
-                            state.tasbihList = [...DEFAULT_TASBIH];
-                            state.counts = {};
-                            DEFAULT_TASBIH.forEach(t => state.counts[t.id] = 0);
-                        }
-                        state.currentTasbih = state.tasbihList[0].id;
+                state = Object.assign({}, state, parsed);
+
+                // Legacy: single goal -> per-tasbih goals
+                if (parsed.goal !== undefined && (!parsed.goals || !Object.keys(parsed.goals).length)) {
+                    state.goals = {};
+                    (state.tasbihList || []).forEach(t => { state.goals[t.id] = parsed.goal; });
+                }
+                delete state.goal; delete state.goalReached;
+
+                // Legacy: merge misspelled IDs
+                for (const oldId in ID_MIGRATION) {
+                    const newId = ID_MIGRATION[oldId];
+                    if (state.counts && state.counts[oldId] !== undefined) {
+                        state.counts[newId] = (state.counts[newId] || 0) + state.counts[oldId];
+                        delete state.counts[oldId];
                     }
-                } catch(e) {}
+                    for (const day in (state.history || {})) {
+                        const h = state.history[day];
+                        if (h && h[oldId] !== undefined) { h[newId] = (h[newId] || 0) + h[oldId]; delete h[oldId]; }
+                    }
+                    state.tasbihList = (state.tasbihList || []).map(t => t.id === oldId ? Object.assign({}, t, { id: newId }) : t);
+                    if (state.currentTasbih === oldId) state.currentTasbih = newId;
+                }
+
+                // Legacy: build list from count keys
+                if ((!state.tasbihList || !state.tasbihList.length) && state.counts && Object.keys(state.counts).length) {
+                    const ids = Object.keys(state.counts);
+                    state.tasbihList = DEFAULT_TASBIH.filter(t => ids.includes(t.id));
+                }
             }
-            
-            // If still no tasbihs, add defaults
-            if (state.tasbihList.length === 0) {
-                state.tasbihList = [...DEFAULT_TASBIH];
+
+            // First run / empty -> defaults
+            if (!state.tasbihList || !state.tasbihList.length) {
+                state.tasbihList = DEFAULT_TASBIH.map(t => Object.assign({}, t));
                 state.currentTasbih = DEFAULT_TASBIH[0].id;
-                DEFAULT_TASBIH.forEach(t => {
-                    state.counts[t.id] = 0;
-                    if (!state.goals[t.id]) state.goals[t.id] = 100;
-                });
-                save();
             }
 
-            // Ensure all tasbihs have a goal
+            // Enrich every tasbih with Arabic/meaning/round; ensure goals & counts exist
+            state.tasbihList = state.tasbihList.map(enrichTasbih);
             state.tasbihList.forEach(t => {
+                if (state.counts[t.id] === undefined) state.counts[t.id] = 0;
                 if (!state.goals[t.id]) state.goals[t.id] = 100;
             });
+            if (!state.currentTasbih || !state.tasbihList.some(t => t.id === state.currentTasbih)) {
+                state.currentTasbih = state.tasbihList[0].id;
+            }
+            save();
         }
 
-        // Toast
+        // ---- Toast ----
+        let toastTimer;
         function toast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2000);
+            const el = $('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
         }
 
-        // Celebrate
+        // ---- Celebration (gentle gold/emerald) ----
         function celebrate() {
-            const colors = ['#58A6FF','#238636','#F0883E','#A371F7','#F778BA'];
-            for (let i = 0; i < 40; i++) {
+            const colors = ['#e9c46a', '#f3d9a0', '#3ddc97', '#2a9d8f', '#c99b3f'];
+            const n = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 44;
+            for (let i = 0; i < n; i++) {
                 const c = document.createElement('div');
                 c.className = 'confetti';
-                c.style.left = Math.random() * 100 + '%';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-12px';
                 c.style.background = colors[Math.floor(Math.random() * colors.length)];
-                c.style.animationDelay = Math.random() * 0.5 + 's';
+                c.style.animationDelay = Math.random() * 0.6 + 's';
                 document.body.appendChild(c);
-                setTimeout(() => c.remove(), 2500);
+                setTimeout(() => c.remove(), 3200);
             }
         }
 
-        // Render Main UI
-        function render() {
-            const main = document.getElementById('mainArea');
-            
-            if (state.tasbihList.length === 0) {
-                main.innerHTML = `
-                    <div class="empty-state">
-                        <h3>Welcome to Tasbih Pro</h3>
-                        <p>Add your first tasbih to start counting</p>
-                        <button class="btn btn-primary" style="width:auto;padding:12px 24px;" onclick="showAddTasbih()">+ Add Tasbih</button>
-                    </div>
-                `;
+        // ---- Bead geometry ----
+        function beadSvg(round) {
+            const cx = 150, cy = 150, r = 132;
+            const br = round <= 34 ? 6 : (round <= 66 ? 4.6 : 3.6);
+            let out = '';
+            for (let i = 0; i < round; i++) {
+                const ang = (i / round) * Math.PI * 2 - Math.PI / 2;
+                const x = (cx + r * Math.cos(ang)).toFixed(1);
+                const y = (cy + r * Math.sin(ang)).toFixed(1);
+                out += '<circle class="bead' + (i === 0 ? ' head' : '') + '" data-i="' + i + '" cx="' + x + '" cy="' + y + '" r="' + br + '"/>';
+            }
+            return out;
+        }
+
+        // ---- Render main area ----
+        function renderMain() {
+            const main = $('mainArea');
+
+            if (!state.tasbihList.length) {
+                main.innerHTML = '<div class="empty-state"><div class="em">\u{1FAE1}</div><h3>Bismillah</h3><p>Add your first dhikr to begin counting your remembrance.</p><button class="btn btn-primary" style="width:auto;padding:12px 26px;" id="emptyAdd">+ Add a dhikr</button></div>';
+                $('emptyAdd').onclick = function () { openSettings(); showAddForm(); };
                 return;
             }
 
-            const current = state.tasbihList.find(t => t.id === state.currentTasbih) || state.tasbihList[0];
-            if (!state.currentTasbih) {
-                state.currentTasbih = current.id;
-            }
-            const count = state.counts[state.currentTasbih] || 0;
-            const percent = Math.min((count / currentGoal()) * 100, 100);
-            const offset = 176 - (176 * percent / 100);
+            const t = currentTasbihObj();
+            const round = t.round || 33;
+            const goalCirc = 2 * Math.PI * 138;
 
-            main.innerHTML = `
-                <div class="current-tasbih-name">${current.name}</div>
-                <button class="counter-btn" id="counterBtn">
-                    <span class="count">${count}</span>
-                </button>
-                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;">
-                    <span class="decrease-btn" id="decreaseBtn">− decrease</span>
-                    <span class="reset-btn" id="resetBtn">↺ reset</span>
-                </div>
-                <p class="hint">Tap to count • <kbd>Enter</kbd> +1 • <kbd>Backspace</kbd> -1 • <kbd>↑</kbd> undo</p>
-                
-                <div class="goal-card">
-                    <div class="goal-ring">
-                        <svg width="64" height="64" viewBox="0 0 64 64">
-                            <circle class="bg" cx="32" cy="32" r="28"/>
-                            <circle class="progress" cx="32" cy="32" r="28" style="stroke-dashoffset:${offset}"/>
-                        </svg>
-                        <div class="goal-text">
-                            <span class="percent">${Math.round(percent)}%</span>
-                            <span class="label">Goal</span>
-                        </div>
-                    </div>
-                    <div class="goal-info" id="goalInfo">
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <h3>Daily Goal</h3>
-                            <span style="font-size:12px;cursor:pointer;" id="editGoalBtn">✏️</span>
-                        </div>
-                        <p>${count} / ${currentGoal()} dhikr</p>
-                    </div>
-                </div>
+            main.innerHTML =
+                '<div class="dhikr-head">' +
+                    (t.arabic ? '<div class="dhikr-arabic">' + escapeHtml(t.arabic) + '</div>' : '') +
+                    '<div class="dhikr-translit">' + escapeHtml(t.name) + '</div>' +
+                    (t.meaning ? '<div class="dhikr-meaning">' + escapeHtml(t.meaning) + '</div>' : '') +
+                '</div>' +
+                '<div class="counter-wrap">' +
+                    '<svg class="counter-svg" viewBox="0 0 300 300" aria-hidden="true">' +
+                        '<defs><linearGradient id="goalGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3ddc97"/><stop offset="1" stop-color="#e9c46a"/></linearGradient></defs>' +
+                        '<circle class="goal-track" cx="150" cy="150" r="138"/>' +
+                        '<circle class="goal-arc" id="goalArc" cx="150" cy="150" r="138" stroke-dasharray="' + goalCirc.toFixed(1) + '" stroke-dashoffset="' + goalCirc.toFixed(1) + '"/>' +
+                        '<g id="beadGroup">' + beadSvg(round) + '</g>' +
+                    '</svg>' +
+                    '<button class="counter-btn" id="counterBtn" aria-label="Count ' + escapeHtml(t.name) + '">' +
+                        '<span class="count" id="countVal">0</span>' +
+                        '<span class="round-label" id="roundLabel"></span>' +
+                        '<span class="tap-hint">tap to count</span>' +
+                    '</button>' +
+                '</div>' +
+                '<div class="goal-line">' +
+                    '<span><b id="goalNow">0</b> / <span id="goalTarget">' + currentGoal() + '</span> today</span>' +
+                    '<button class="edit" id="editGoal" title="Edit goal" aria-label="Edit daily goal">✏️</button>' +
+                '</div>' +
+                '<div class="actions">' +
+                    '<button class="chip" id="decreaseBtn">− undo one</button>' +
+                    '<button class="chip" id="resetBtn">↺ reset</button>' +
+                '</div>' +
+                '<div class="verse" id="verse"></div>' +
+                '<div class="tasbih-list">' +
+                    state.tasbihList.map(function (x) {
+                        return '<button class="tasbih-pill ' + (x.id === state.currentTasbih ? 'active' : '') + '" data-id="' + escapeHtml(x.id) + '">' +
+                            (x.arabic ? '<span class="p-ar">' + escapeHtml(x.arabic.split(' ')[0]) + '</span>' : '') +
+                            '<span>' + escapeHtml(x.name) + '</span></button>';
+                    }).join('') +
+                    '<button class="tasbih-pill add-pill" id="addPill" aria-label="Add dhikr">+</button>' +
+                '</div>';
 
-                <div class="tasbih-list">
-                    ${state.tasbihList.map(t => `
-                        <button class="tasbih-pill ${t.id === state.currentTasbih ? 'active' : ''}" data-id="${t.id}">
-                            ${t.arabic ? `<span class="pill-arabic">${t.display || t.name.slice(0,3)}</span>` : ''}${t.name}
-                        </button>
-                    `).join('')}
-                    <button class="tasbih-pill add-pill" id="addTasbihPill">+</button>
-                </div>
-            `;
+            beadEls = Array.prototype.slice.call(main.querySelectorAll('.bead'));
 
-            // Events
-            document.getElementById('counterBtn').addEventListener('click', increment);
-            
-            const decreaseBtn = document.getElementById('decreaseBtn');
-            if (decreaseBtn) {
-                decreaseBtn.addEventListener('click', () => {
-                    if (state.counts[state.currentTasbih] > 0) {
-                        lastCount = { id: state.currentTasbih, count: state.counts[state.currentTasbih] };
-                        state.counts[state.currentTasbih]--;
-                        save();
-                        render();
-                        updateStats();
-                    }
-                });
-            }
-
-            const resetBtn = document.getElementById('resetBtn');
-            if (resetBtn) {
-                resetBtn.addEventListener('click', () => {
-                    if (state.counts[state.currentTasbih] > 0) {
-                        lastCount = { id: state.currentTasbih, count: state.counts[state.currentTasbih] };
-                        state.counts[state.currentTasbih] = 0;
-                        state.goalsReached[state.currentTasbih] = false;
-                        save();
-                        render();
-                        updateStats();
-                        toast('Count reset');
-                    }
-                });
-            }
-            
-            document.querySelectorAll('.tasbih-pill[data-id]').forEach(btn => {
-                btn.addEventListener('click', () => {
+            $('counterBtn').addEventListener('click', onTap);
+            $('decreaseBtn').addEventListener('click', decrement);
+            $('resetBtn').addEventListener('click', resetCurrent);
+            $('editGoal').addEventListener('click', editGoal);
+            $('addPill').addEventListener('click', function () { openSettings(); showAddForm(); });
+            main.querySelectorAll('.tasbih-pill[data-id]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
                     state.currentTasbih = btn.dataset.id;
+                    lastAction = null;
                     save();
-                    render();
+                    renderMain();
                 });
             });
 
-            const addPill = document.getElementById('addTasbihPill');
-            if (addPill) {
-                addPill.addEventListener('click', window.showAddTasbih);
+            showVerse();
+            paint();
+        }
+
+        // ---- Lightweight per-count paint ----
+        function paint() {
+            const count = state.counts[state.currentTasbih] || 0;
+            const round = currentRound();
+            const goal = currentGoal();
+            const pos = count % round;
+            const lit = (count > 0 && pos === 0) ? round : pos;
+            const rounds = Math.floor(count / round);
+
+            const cv = $('countVal'); if (cv) cv.textContent = count;
+            const gn = $('goalNow'); if (gn) gn.textContent = count;
+            const gt = $('goalTarget'); if (gt) gt.textContent = goal;
+
+            const rl = $('roundLabel');
+            if (rl) rl.textContent = lit + ' / ' + round + (rounds ? '  ·  ' + rounds + ' round' + (rounds > 1 ? 's' : '') : '');
+
+            for (let i = 0; i < beadEls.length; i++) {
+                beadEls[i].classList.toggle('lit', i < lit);
             }
 
-            const editGoalBtn = document.getElementById('editGoalBtn');
-            if (editGoalBtn) {
-                editGoalBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    const newGoal = prompt('Set daily goal:', currentGoal());
-                    if (newGoal && parseInt(newGoal) > 0) {
-                        state.goals[state.currentTasbih] = parseInt(newGoal);
-                        save();
-                        render();
-                    }
-                };
-            }
-
-            // Check goal
-            if (count >= currentGoal() && !state.goalsReached[state.currentTasbih]) {
-                state.goalsReached[state.currentTasbih] = true;
-                celebrate();
+            const arc = $('goalArc');
+            if (arc) {
+                const circ = 2 * Math.PI * 138;
+                const pct = Math.min(count / goal, 1);
+                arc.style.strokeDashoffset = (circ * (1 - pct)).toFixed(1);
             }
         }
 
-        // Counter
-        let lastCount = null;
+        // ---- Actions ----
+        let suppressClickUntil = 0;
+        function onTap() {
+            if (Date.now() < suppressClickUntil) { suppressClickUntil = 0; return; }
+            const btn = $('counterBtn');
+            if (btn) {
+                const rip = document.createElement('span');
+                rip.className = 'ripple';
+                rip.style.width = rip.style.height = btn.getBoundingClientRect().width + 'px';
+                rip.style.left = '0'; rip.style.top = '0';
+                btn.appendChild(rip);
+                setTimeout(function () { rip.remove(); }, 600);
+                btn.classList.remove('bump'); void btn.offsetWidth; btn.classList.add('bump');
+            }
+            increment();
+        }
+
         function increment() {
-            const btn = document.getElementById('counterBtn');
-            btn.classList.add('bump');
-            setTimeout(() => btn.classList.remove('bump'), 150);
-            
-            lastCount = { id: state.currentTasbih, count: state.counts[state.currentTasbih] };
-            state.counts[state.currentTasbih] = (state.counts[state.currentTasbih] || 0) + 1;
-            
-            playSound();
-            if (state.vibrate && navigator.vibrate) navigator.vibrate(25);
-            
+            const id = state.currentTasbih;
+            const prev = state.counts[id] || 0;
+            lastAction = { id: id, count: prev };
+            state.counts[id] = prev + 1;
+            const now = state.counts[id];
+            const round = currentRound();
+            const goal = currentGoal();
+
+            const completedRound = now % round === 0;
+            if (completedRound) {
+                playRound();
+                if (state.vibrate && navigator.vibrate) navigator.vibrate([18, 40, 18]);
+            } else {
+                playTap();
+                if (state.vibrate && navigator.vibrate) navigator.vibrate(22);
+            }
+
             save();
-            render();
+            paint();
             updateStats();
+
+            if (now >= goal && !state.goalsReached[id]) {
+                state.goalsReached[id] = true;
+                save();
+                celebrate();
+                toast('\u{1F31F} Daily goal reached — masha’Allah!');
+            } else if (completedRound) {
+                toast('Round complete · ' + Math.floor(now / round) + ' × ' + round);
+            }
         }
 
-        // Keyboard
-        document.addEventListener('keydown', e => {
-            if (document.getElementById('statsModal').classList.contains('open') ||
-                document.getElementById('settingsModal').classList.contains('open')) return;
-            if (state.tasbihList.length === 0) return;
-            
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                increment();
-            } else if (e.key === 'Backspace') {
-                e.preventDefault();
-                if (state.counts[state.currentTasbih] > 0) {
-                    lastCount = { id: state.currentTasbih, count: state.counts[state.currentTasbih] };
-                    state.counts[state.currentTasbih]--;
-                    save();
-                    render();
-                }
-            } else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                if (lastCount) {
-                    state.counts[lastCount.id] = lastCount.count;
-                    lastCount = null;
-                    save();
-                    render();
-                    toast('Undone');
-                }
-            }
-        });
+        function decrement() {
+            const id = state.currentTasbih;
+            if ((state.counts[id] || 0) <= 0) return;
+            lastAction = { id: id, count: state.counts[id] };
+            state.counts[id] = clamp0(state.counts[id] - 1);
+            if (state.counts[id] < currentGoal()) state.goalsReached[id] = false;
+            save(); paint(); updateStats();
+        }
 
-        // Touch hold to decrement
-        let pressTimer;
-        document.addEventListener('touchstart', e => {
-            if (e.target.id !== 'counterBtn') return;
-            pressTimer = setTimeout(() => {
-                if (state.counts[state.currentTasbih] > 0) {
-                    state.counts[state.currentTasbih]--;
-                    save();
-                    render();
-                    toast('Hold to decrease');
-                }
-            }, 500);
-        });
-        document.addEventListener('touchend', () => clearTimeout(pressTimer));
-        document.addEventListener('touchmove', () => clearTimeout(pressTimer));
-
-        // Swipe to undo
-        let startY;
-        let swipeTarget = null;
-        document.addEventListener('touchstart', e => {
-            startY = e.touches[0].clientY;
-            swipeTarget = e.target.closest('#counterBtn') || e.target.closest('.decrease-btn');
-        });
-        document.addEventListener('touchend', e => {
-            if (swipeTarget && startY - e.changedTouches[0].clientY > 60 && lastCount) {
-                state.counts[lastCount.id] = lastCount.count;
-                lastCount = null;
-                save();
-                render();
-                toast('Undone');
-            }
-        });
-
-        // Add tasbih
-        window.showAddTasbih = function() {
-            const container = document.getElementById('tasbihFormContainer');
-            container.innerHTML = `
-                <div class="tasbih-form">
-                    <input type="text" id="newName" placeholder="Name (e.g. SubhanAllah)">
-                    <div class="tasbih-form-btns">
-                        <button class="btn btn-primary" id="addTasbihBtn">Add</button>
-                        <button class="btn" style="background:var(--surface-light);" id="cancelAddTasbih">Cancel</button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('newName').focus();
-            document.getElementById('addTasbihBtn').onclick = window.addTasbih;
-            document.getElementById('cancelAddTasbih').onclick = window.hideAddTasbih;
-        };
-
-        window.hideAddTasbih = function() {
-            document.getElementById('tasbihFormContainer').innerHTML = '';
-        };
-
-        window.addTasbih = function() {
-            const name = document.getElementById('newName').value.trim();
-            const arabic = '';
-            if (!name) return toast('Enter a name');
-
-            const id = 't_' + Date.now();
-            const display = arabic || name.slice(0, 4);
-            
-            state.tasbihList.push({ id, name, arabic, display });
+        function resetCurrent() {
+            const id = state.currentTasbih;
+            if ((state.counts[id] || 0) <= 0) return;
+            lastAction = { id: id, count: state.counts[id] };
             state.counts[id] = 0;
-            state.goals[id] = 100;
-            state.currentTasbih = id;
-            
-            window.hideAddTasbih();
-            renderCustomList();
-            save();
-            render();
-            toast('Tasbih added!');
-        };
-
-        function escapeAttr(s) {
-            return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            state.goalsReached[id] = false;
+            save(); paint(); updateStats();
+            toast('Count reset — tap undo to restore');
         }
 
-        function renderCustomList() {
-            const list = document.getElementById('customList');
-            list.innerHTML = state.tasbihList.map(t => `
-                <div class="custom-item">
-                    <input type="text" value="${escapeAttr(t.name)}" onchange="window.updateTasbih('${t.id}', 'name', this.value)">
-                    <button class="del-btn" onclick="window.deleteTasbih('${t.id}')">×</button>
-                </div>
-            `).join('');
+        function undo() {
+            if (!lastAction) return;
+            state.counts[lastAction.id] = lastAction.count;
+            if (state.counts[lastAction.id] < (state.goals[lastAction.id] || 100)) state.goalsReached[lastAction.id] = false;
+            lastAction = null;
+            save(); paint(); updateStats();
+            toast('Undone');
         }
 
-        window.updateTasbih = function(id, field, value) {
-            const t = state.tasbihList.find(x => x.id === id);
-            if (t) {
-                t[field] = value;
-                if (field === 'arabic') t.display = value || t.name.slice(0,4);
-                save();
-                render();
+        function editGoal() {
+            const val = prompt('Set a daily goal for ' + currentTasbihObj().name + ':', currentGoal());
+            if (val === null) return;
+            const n = parseInt(val, 10);
+            if (n > 0) {
+                state.goals[state.currentTasbih] = n;
+                state.goalsReached[state.currentTasbih] = (state.counts[state.currentTasbih] || 0) >= n;
+                save(); paint();
             }
-        };
+        }
 
-        window.deleteTasbih = function(id) {
-            if (!confirm('Delete this tasbih?')) return;
-            state.tasbihList = state.tasbihList.filter(t => t.id !== id);
-            delete state.counts[id];
-            if (state.currentTasbih === id) {
-                state.currentTasbih = state.tasbihList[0]?.id || null;
-            }
-            renderCustomList();
-            save();
-            render();
-        };
+        // ---- Verse ----
+        function showVerse() {
+            const v = VERSES[Math.floor(Math.random() * VERSES.length)];
+            const el = $('verse');
+            if (el) el.innerHTML = '“' + escapeHtml(v.t) + '”<span class="ref">— ' + escapeHtml(v.r) + '</span>';
+        }
 
-        // Stats
+        // ---- Stats ----
         function updateStats() {
-            const todayTotal = Object.values(state.counts).reduce((a,b) => a+b, 0);
-            const currentCount = state.counts[state.currentTasbih] || 0;
-            document.getElementById('statToday').textContent = currentCount;
-            document.getElementById('statStreak').textContent = state.streak;
-            
-            const weekTotal = Object.keys(state.history || {}).sort().slice(-7).reduce((sum, day) => 
-                sum + Object.values(state.history[day] || {}).reduce((a,b) => a+b, 0), 0);
-            document.getElementById('statWeek').textContent = weekTotal;
-            
-            const allTime = Object.values(state.history || {}).reduce((sum, day) => 
-                sum + Object.values(day || {}).reduce((a,b) => a+b, 0), 0) + todayTotal;
-            document.getElementById('statTotal').textContent = allTime;
+            const todayTotal = Object.values(state.counts).reduce(function (a, b) { return a + b; }, 0);
+            const liveStreak = state.streak + (todayTotal > 0 ? 1 : 0);
+            $('statToday').textContent = todayTotal;
+            $('statStreak').textContent = liveStreak;
 
-            // Chart
-            const days = ['S','M','T','W','T','F','S'];
-            const today = new Date();
+            const weekKeys = Object.keys(state.history || {}).sort().slice(-6);
+            const weekTotal = weekKeys.reduce(function (s, d) {
+                return s + Object.values(state.history[d] || {}).reduce(function (a, b) { return a + b; }, 0);
+            }, 0) + todayTotal;
+            $('statWeek').textContent = weekTotal;
+
+            const allTime = Object.values(state.history || {}).reduce(function (s, day) {
+                return s + Object.values(day || {}).reduce(function (a, b) { return a + b; }, 0);
+            }, 0) + todayTotal;
+            $('statTotal').textContent = allTime;
+
+            const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            const now = new Date();
             let max = 1;
             const data = [];
             for (let i = 6; i >= 0; i--) {
-                const d = new Date(today);
-                d.setDate(d.getDate() - i);
+                const d = new Date(now); d.setDate(d.getDate() - i);
                 const key = d.toDateString();
-                const dayData = key === state.today ? state.counts : (state.history?.[key] || {});
-                const c = Object.values(dayData).reduce((a,b)=>a+b,0);
-                data.push({ day: days[d.getDay()], count: c });
+                const dayData = key === state.today ? state.counts : ((state.history && state.history[key]) || {});
+                const c = Object.values(dayData).reduce(function (a, b) { return a + b; }, 0);
+                data.push({ day: days[d.getDay()], count: c, today: key === state.today });
                 if (c > max) max = c;
             }
-            document.getElementById('chart').innerHTML = data.map(d => `
-                <div class="chart-bar">
-                    <div class="bar" style="height:${(d.count/max)*60 + 8}px"></div>
-                    <span class="day">${d.day}</span>
-                </div>
-            `).join('');
+            $('chart').innerHTML = data.map(function (d) {
+                return '<div class="chart-bar' + (d.today ? ' today' : '') + '">' +
+                    '<div class="bar" style="height:' + ((d.count / max) * 68 + 6) + 'px"></div>' +
+                    '<span class="day">' + d.day + '</span></div>';
+            }).join('');
         }
 
-        // Modals
-        function anyModalOpen() {
-            return document.getElementById('statsModal').classList.contains('open') ||
-                   document.getElementById('settingsModal').classList.contains('open');
-        }
-        function syncBodyScroll() {
-            document.body.style.overflow = anyModalOpen() ? 'hidden' : '';
+        // ---- Add / edit / delete tasbih ----
+        function showAddForm() {
+            const c = $('tasbihFormContainer');
+            c.innerHTML =
+                '<div class="tasbih-form">' +
+                    '<input type="text" id="newName" placeholder="Name (e.g. Astaghfirullah)" maxlength="40">' +
+                    '<input type="text" id="newArabic" class="ar" placeholder="Arabic (optional)" maxlength="60">' +
+                    '<input type="text" id="newMeaning" placeholder="Meaning (optional)" maxlength="80">' +
+                    '<input type="number" id="newRound" placeholder="Beads per round (default 33)" min="1" max="1000" inputmode="numeric">' +
+                    '<div class="row2">' +
+                        '<button class="btn btn-primary" id="saveTasbih">Add</button>' +
+                        '<button class="btn btn-ghost" id="cancelTasbih">Cancel</button>' +
+                    '</div>' +
+                '</div>';
+            $('newName').focus();
+            $('saveTasbih').onclick = addTasbih;
+            $('cancelTasbih').onclick = function () { c.innerHTML = ''; };
         }
 
-        document.getElementById('statsBtn').addEventListener('click', () => {
-            updateStats();
-            document.getElementById('statsModal').classList.add('open');
-            syncBodyScroll();
-        });
-        document.getElementById('closeStats').onclick = () => {
-            document.getElementById('statsModal').classList.remove('open');
-            syncBodyScroll();
-        };
+        function addTasbih() {
+            const name = $('newName').value.trim();
+            if (!name) { toast('Please enter a name'); return; }
+            const arabic = $('newArabic').value.trim();
+            const meaning = $('newMeaning').value.trim();
+            const round = Math.max(1, Math.min(1000, parseInt($('newRound').value, 10) || 33));
+            const id = 't_' + Date.now().toString(36);
 
-        document.getElementById('settingsBtn').addEventListener('click', () => {
-            document.getElementById('soundToggle').classList.toggle('on', state.sound);
-            document.getElementById('vibrateToggle').classList.toggle('on', state.vibrate);
-            document.getElementById('goalInput').value = currentGoal();
+            state.tasbihList.push({ id: id, name: name, arabic: arabic, meaning: meaning, round: round });
+            state.counts[id] = 0;
+            state.goals[id] = 100;
+            state.currentTasbih = id;
+            lastAction = null;
+
+            $('tasbihFormContainer').innerHTML = '';
+            save();
             renderCustomList();
-            window.hideAddTasbih();
-            document.getElementById('settingsModal').classList.add('open');
-            syncBodyScroll();
-        });
-        document.getElementById('closeSettings').onclick = () => {
-            document.getElementById('settingsModal').classList.remove('open');
-            syncBodyScroll();
-        };
+            renderMain();
+            toast('Dhikr added');
+        }
 
-        // Settings
-        document.getElementById('soundToggle').onclick = function() {
+        function renderCustomList() {
+            const list = $('customList');
+            list.innerHTML = state.tasbihList.map(function (t) {
+                return '<div class="custom-item">' +
+                    '<input type="text" value="' + escapeHtml(t.name) + '" aria-label="Name" onchange="TASBIH.update(\'' + t.id + '\',\'name\',this.value)">' +
+                    '<input type="text" class="ar" value="' + escapeHtml(t.arabic || '') + '" placeholder="Arabic" aria-label="Arabic" onchange="TASBIH.update(\'' + t.id + '\',\'arabic\',this.value)">' +
+                    '<button class="del-btn" aria-label="Delete" onclick="TASBIH.remove(\'' + t.id + '\')">×</button>' +
+                '</div>';
+            }).join('');
+        }
+
+        function updateTasbih(id, field, value) {
+            const t = state.tasbihList.find(function (x) { return x.id === id; });
+            if (!t) return;
+            t[field] = String(value).trim();
+            save();
+            renderMain();
+        }
+
+        function deleteTasbih(id) {
+            if (!confirm('Delete this dhikr and its today’s count?')) return;
+            state.tasbihList = state.tasbihList.filter(function (t) { return t.id !== id; });
+            delete state.counts[id];
+            if (state.currentTasbih === id) state.currentTasbih = (state.tasbihList[0] && state.tasbihList[0].id) || null;
+            lastAction = null;
+            save();
+            renderCustomList();
+            renderMain();
+        }
+
+        // Bridge for inline handlers in the settings list
+        window.TASBIH = { update: updateTasbih, remove: deleteTasbih };
+
+        // ---- Modals ----
+        function anyModalOpen() {
+            return $('statsModal').classList.contains('open') || $('settingsModal').classList.contains('open');
+        }
+        function syncScroll() { document.body.style.overflow = anyModalOpen() ? 'hidden' : ''; }
+
+        function openStats() { updateStats(); $('statsModal').classList.add('open'); syncScroll(); }
+        function closeStats() { $('statsModal').classList.remove('open'); syncScroll(); }
+        function openSettings() {
+            $('soundToggle').classList.toggle('on', state.sound);
+            $('soundToggle').setAttribute('aria-checked', state.sound);
+            $('vibrateToggle').classList.toggle('on', state.vibrate);
+            $('vibrateToggle').setAttribute('aria-checked', state.vibrate);
+            $('goalInput').value = currentGoal();
+            $('tasbihFormContainer').innerHTML = '';
+            renderCustomList();
+            $('settingsModal').classList.add('open');
+            syncScroll();
+        }
+        function closeSettings() { $('settingsModal').classList.remove('open'); syncScroll(); }
+
+        $('statsBtn').addEventListener('click', openStats);
+        $('closeStats').addEventListener('click', closeStats);
+        $('settingsBtn').addEventListener('click', openSettings);
+        $('closeSettings').addEventListener('click', closeSettings);
+        $('showAddBtn').addEventListener('click', showAddForm);
+
+        $('soundToggle').addEventListener('click', function () {
             this.classList.toggle('on');
             state.sound = this.classList.contains('on');
-            if (state.sound) playSound();
+            this.setAttribute('aria-checked', state.sound);
+            if (state.sound) playTap();
             save();
-        };
-        document.getElementById('vibrateToggle').onclick = function() {
+        });
+        $('vibrateToggle').addEventListener('click', function () {
             this.classList.toggle('on');
             state.vibrate = this.classList.contains('on');
+            this.setAttribute('aria-checked', state.vibrate);
+            if (state.vibrate && navigator.vibrate) navigator.vibrate(20);
             save();
-        };
-        document.getElementById('goalInput').onchange = function() {
-            state.goals[state.currentTasbih] = parseInt(this.value) || 100;
-            state.goalsReached[state.currentTasbih] = false;
-            save();
-            render();
-        };
-
-        document.getElementById('resetToday').onclick = () => {
-            state.counts = {};
-            state.goalsReached = {};
-            save();
-            render();
-            document.getElementById('settingsModal').classList.remove('open');
-            syncBodyScroll();
-            toast('Reset');
-        };
-        document.getElementById('resetAll').onclick = () => {
-            if (!confirm('Delete all data?')) return;
-            localStorage.removeItem('tasbihPro');
-            state = { tasbihList: [], currentTasbih: null, counts: {}, history: {}, goals: {}, goalsReached: {}, today: new Date().toDateString(), streak: 0, sound: false, vibrate: true };
-            render();
-            document.getElementById('settingsModal').classList.remove('open');
-            syncBodyScroll();
-            toast('All data deleted');
-        };
-
-        // Click outside to close modal
-        document.querySelectorAll('.modal-overlay').forEach(m => {
-            m.addEventListener('click', e => {
-                if (e.target === m) {
-                    m.classList.remove('open');
-                    syncBodyScroll();
-                }
-            });
+        });
+        $('goalInput').addEventListener('change', function () {
+            const n = parseInt(this.value, 10);
+            state.goals[state.currentTasbih] = n > 0 ? n : 100;
+            state.goalsReached[state.currentTasbih] = (state.counts[state.currentTasbih] || 0) >= state.goals[state.currentTasbih];
+            save(); paint();
         });
 
-        // Init
+        $('resetToday').addEventListener('click', function () {
+            if (!confirm('Reset today’s counts for every dhikr?')) return;
+            state.counts = {};
+            state.goalsReached = {};
+            state.tasbihList.forEach(function (t) { state.counts[t.id] = 0; });
+            lastAction = null;
+            save(); renderMain(); updateStats();
+            closeSettings();
+            toast('Today reset');
+        });
+        $('resetAll').addEventListener('click', function () {
+            if (!confirm('Delete ALL data — history, streak and custom dhikr? This cannot be undone.')) return;
+            try { localStorage.removeItem('tasbihPro'); } catch (e) {}
+            state = { tasbihList: [], currentTasbih: null, counts: {}, history: {}, goals: {}, goalsReached: {}, today: new Date().toDateString(), streak: 0, sound: false, vibrate: true };
+            lastAction = null;
+            load();
+            renderMain(); updateStats();
+            closeSettings();
+            toast('All data cleared');
+        });
+
+        document.querySelectorAll('.modal-overlay').forEach(function (m) {
+            m.addEventListener('click', function (e) { if (e.target === m) { m.classList.remove('open'); syncScroll(); } });
+        });
+
+        // ---- Keyboard ----
+        document.addEventListener('keydown', function (e) {
+            if (anyModalOpen()) { if (e.key === 'Escape') { closeStats(); closeSettings(); } return; }
+            if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+            if (!state.tasbihList.length) return;
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onTap(); }
+            else if (e.key === 'Backspace') { e.preventDefault(); decrement(); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); undo(); }
+        });
+
+        // ---- Touch: long-press on counter to decrement, swipe-up to undo ----
+        let pressTimer = null, startY = 0, swipeArmed = false;
+        document.addEventListener('touchstart', function (e) {
+            const onCounter = e.target.closest && e.target.closest('#counterBtn');
+            swipeArmed = !!onCounter;
+            startY = e.touches[0].clientY;
+            if (onCounter) {
+                pressTimer = setTimeout(function () { pressTimer = null; suppressClickUntil = Date.now() + 600; decrement(); toast('Held — decreased by one'); }, 550);
+            }
+        }, { passive: true });
+        function clearPress() { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } }
+        document.addEventListener('touchmove', clearPress, { passive: true });
+        document.addEventListener('touchend', function (e) {
+            clearPress();
+            if (swipeArmed && startY - e.changedTouches[0].clientY > 60) undo();
+            swipeArmed = false;
+        }, { passive: true });
+
+        // ---- Boot ----
         load();
-        render();
+        renderMain();
+        updateStats();
+
+        // ---- PWA service worker (only when hosted over http/https) ----
+        if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('sw.js').catch(function () {});
+            });
+        }
+    })();
     </script>
 </body>
 </html>

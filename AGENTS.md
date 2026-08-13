@@ -6,16 +6,18 @@ Single-file progressive web app (`index.html`) — a tasbih/dhikr counter for Mu
 
 ## Architecture
 
-- Everything lives in `index.html` (~1020 lines): HTML structure, CSS styles, and all JS logic inline.
-- No separate JS/CSS files. No bundler. No framework.
-- `SPEC.md` is the design spec (UI/UX, features, acceptance criteria).
-- `logo.svg` and `sitemap.xml` are the only other files.
-- Deployed via GitHub Pages at `https://kaiserkonok.github.io/tasbih_counter/`.
+- The app UI lives in `index.html`: HTML structure, CSS styles, and all JS logic inline. The JS is wrapped in an IIFE (`(function(){ 'use strict'; ... })()`) — no globals leak except `window.TASBIH` (bridge for the inline `onchange`/`onclick` handlers in the settings list).
+- `manifest.json` + `sw.js` add installable PWA / offline support.
+- No separate app JS/CSS, no bundler, no framework.
+- `SPEC.md` is the design spec; `logo.svg` and `sitemap.xml` are supporting assets.
+- Deployed via GitHub Pages at `https://kaiserkonok.github.io/tasbih_counter/` (relative paths throughout so the sub-path scope works).
 
 ## Running
 
-- Open `index.html` directly in a browser. No server needed.
+- Open `index.html` directly in a browser for everything except the service worker.
+- The service worker only registers over `http(s)://`, so for offline/PWA testing serve it: `python3 -m http.server 8000`.
 - No build step, no install step, no test suite.
+- Sanity check before committing: syntax-check the inline script and `sw.js` with `node --check` (see the review workflow), and validate `manifest.json` as JSON.
 
 ## Data & State
 
@@ -26,7 +28,10 @@ Single-file progressive web app (`index.html`) — a tasbih/dhikr counter for Mu
 ## Key Gotchas
 
 - JS is inline in `<script>` at the bottom of `index.html` — edits go there.
-- Global functions are attached to `window` (e.g. `window.addTasbih`, `window.showAddTasbih`) because they're called from inline `onclick` handlers in rendered HTML.
-- `render()` rebuilds `main.innerHTML` on every state change — all event listeners are re-attached inside `render()`.
-- Sound uses Web Audio API (requires user gesture to initialize `AudioContext`).
+- `renderMain()` rebuilds `main.innerHTML` and re-attaches listeners when the tasbih list or current selection changes. Per-count updates go through the lightweight `paint()` (updates count text, bead `.lit` classes, and the goal arc) — do NOT call `renderMain()` on every tap or it will flicker and drop the ripple/breathe animations.
+- `beadEls` is a cached array of the current dhikr's bead nodes, rebuilt by `renderMain()` and toggled by `paint()`.
+- All user-entered text (tasbih name/arabic/meaning) MUST go through `escapeHtml()` before being injected — it is rendered via `innerHTML`.
+- `load()` handles migrations (daily rollover, streak, legacy single-goal → per-dhikr goals, misspelled-ID merge, enrichment of old entries with arabic/meaning/round). Keep it backward-compatible with the `tasbihPro` localStorage key.
+- Long-press decrement sets `suppressClickUntil` to swallow the ghost `click` that follows a touch release.
+- Sound uses Web Audio API (needs a user gesture to init `AudioContext`).
 - No linting, no typecheck, no tests exist in this repo.
