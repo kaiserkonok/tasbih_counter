@@ -1,7 +1,7 @@
 <h1 align="center">
-  <img src="logo.svg" alt="Tasbih Pro" width="64" />
+  <img src="logo.svg" alt="Dhikr" width="64" />
   <br/>
-  Tasbih Pro
+  Dhikr
 </h1>
 
 <p align="center">

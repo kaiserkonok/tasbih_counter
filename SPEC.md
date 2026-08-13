@@ -1,7 +1,7 @@
-# Tasbih Pro — Design Spec
+# Dhikr — Design Spec
 
 ## Project Overview
-- **Project name**: Tasbih Pro
+- **Project name**: Dhikr
 - **Type**: Installable Progressive Web App (single `index.html` + service worker + manifest)
 - **Core purpose**: A serene, spiritual dhikr counter that makes remembrance of Allah feel calm, focused, and rewarding.
 - **Target users**: Muslims tracking their daily dhikr.

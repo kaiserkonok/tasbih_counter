@@ -1,6 +1,6 @@
 {
-  "name": "Tasbih Pro — Digital Dhikr Counter",
-  "short_name": "Tasbih Pro",
+  "name": "Dhikr — Digital Tasbih",
+  "short_name": "Dhikr",
   "description": "A serene digital tasbih for the remembrance of Allah. Count your dhikr with Arabic, meanings, prayer-bead rings, goals and stats — fully offline.",
   "start_url": "./",
   "scope": "./",
