@@ -628,6 +628,7 @@
                 '</div>' +
                 '<div class="actions">' +
                     '<button class="chip" id="decreaseBtn">− undo one</button>' +
+                    '<button class="chip" id="setBtn">✎ set count</button>' +
                     '<button class="chip" id="resetBtn">↺ reset</button>' +
                 '</div>' +
                 '<div class="verse" id="verse"></div>' +
@@ -644,6 +645,7 @@
 
             $('counterBtn').addEventListener('click', onTap);
             $('decreaseBtn').addEventListener('click', decrement);
+            $('setBtn').addEventListener('click', setCountManually);
             $('resetBtn').addEventListener('click', resetCurrent);
             $('editGoal').addEventListener('click', editGoal);
             $('addPill').addEventListener('click', function () { openSettings(); showAddForm(); });
@@ -744,6 +746,22 @@
             state.counts[id] = clamp0(state.counts[id] - 1);
             if (state.counts[id] < currentGoal()) state.goalsReached[id] = false;
             save(); paint(); updateStats();
+        }
+
+        function setCountManually() {
+            const id = state.currentTasbih;
+            const current = state.counts[id] || 0;
+            const val = prompt('Set the count for ' + currentTasbihObj().name + ':', current);
+            if (val === null) return;
+            const n = parseInt(val, 10);
+            if (isNaN(n) || n < 0) { toast('Enter a number of 0 or more'); return; }
+            if (n === current) return;
+            lastAction = { id: id, count: current };
+            state.counts[id] = n;
+            // Update goal state quietly (no celebration on a manual set)
+            state.goalsReached[id] = n >= currentGoal();
+            save(); paint(); updateStats();
+            toast('Count set to ' + n);
         }
 
         function resetCurrent() {
